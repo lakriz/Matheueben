@@ -29,7 +29,12 @@ interface Props {
 // Helpers
 // ---------------------------------------------------------------------------
 function shuffle<T>(arr: T[]): T[] {
-  return [...arr].sort(() => Math.random() - 0.5);
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
 }
 
 function generateChoices(correct: number, min: number, max: number): number[] {
@@ -95,10 +100,11 @@ export default function ExerciseSession({ onComplete }: Props) {
 
   const advance = useCallback(
     (correct?: boolean) => {
-      if (correct === true) setScore((s) => s + 1);
+      const newScore = correct ? score + 1 : score;
+      if (correct === true) setScore(newScore);
       const next = currentIdx + 1;
       if (next >= exercises.length) {
-        onComplete(score + (correct ? 1 : 0), exercises.length);
+        onComplete(newScore, exercises.length);
       } else {
         setCurrentIdx(next);
       }
