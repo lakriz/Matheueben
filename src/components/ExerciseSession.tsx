@@ -96,7 +96,7 @@ function buildSession(): ExerciseData[] {
   const scenarioPool: CountingAdditionData[] = allScenarioTypes.map((stype) => {
     let counts: number[];
     if (stype === 'dice') {
-      const d1 = rand(1, 5);
+      const d1 = rand(1, 6);
       const d2 = rand(1, Math.min(6, 10 - d1));
       counts = [d1, d2];
     } else if (stype === 'dice3') {
@@ -118,7 +118,7 @@ function buildSession(): ExerciseData[] {
       type: 'countingAddition',
       scenario: { type: stype, counts },
       correctAnswer: correct,
-      choices: generateChoices(correct, Math.max(2, correct - 3), correct + 3),
+      choices: generateChoices(correct, Math.max(2, correct - 3), Math.min(10, correct + 3)),
     };
   });
   const countings: CountingAdditionData[] = shuffle(scenarioPool).slice(0, 4);
