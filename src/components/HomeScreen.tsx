@@ -49,6 +49,33 @@ const CLASS_1_EXERCISES: ExerciseCard[] = [
     textColor: 'text-orange-700',
     available: true,
   },
+  {
+    id: '1/multiplication',
+    title: 'MALNEHMEN',
+    description: 'Einfache Multiplikation',
+    emoji: '✖️',
+    color: 'bg-pink-400',
+    textColor: 'text-pink-700',
+    available: true,
+  },
+  {
+    id: '1/complement',
+    title: 'ERGÄNZEN',
+    description: 'Finde die fehlende Zahl',
+    emoji: '🧩',
+    color: 'bg-teal-400',
+    textColor: 'text-teal-700',
+    available: true,
+  },
+  {
+    id: '1/doubling',
+    title: 'DOPPELT & HALB',
+    description: 'Verdoppeln und Halbieren',
+    emoji: '🪞',
+    color: 'bg-rose-400',
+    textColor: 'text-rose-700',
+    available: true,
+  },
 ];
 
 export default function HomeScreen({ onSelectExercise }: Props) {
@@ -70,14 +97,14 @@ export default function HomeScreen({ onSelectExercise }: Props) {
       </div>
 
       {/* Exercise cards */}
-      <div className="grid grid-cols-2 gap-3 w-full max-w-3xl mb-2">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 w-full max-w-4xl mb-2">
         {CLASS_1_EXERCISES.map((ex) => (
           <button
             key={ex.id}
             onClick={() => ex.available && onSelectExercise(ex.id)}
             disabled={!ex.available}
             className={`
-              relative flex flex-col items-center gap-2 rounded-2xl p-4 md:p-5 shadow-lg
+              relative flex flex-col items-center gap-1.5 rounded-2xl p-3 md:p-4 shadow-lg
               transition-all text-center
               ${ex.available
                 ? 'bg-white hover:scale-105 active:scale-95 cursor-pointer'
@@ -85,21 +112,21 @@ export default function HomeScreen({ onSelectExercise }: Props) {
             `}
           >
             {!ex.available && (
-              <span className="absolute top-3 right-4 text-sm font-black text-gray-400 uppercase bg-gray-200 rounded-full px-3 py-1">
+              <span className="absolute top-2 right-3 text-xs font-black text-gray-400 uppercase bg-gray-200 rounded-full px-2 py-0.5">
                 BALD ✨
               </span>
             )}
             <div
-              className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center text-3xl md:text-4xl shadow-md
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center text-2xl md:text-3xl shadow-md
                 ${ex.available ? ex.color : 'bg-gray-300'}`}
             >
               {ex.emoji}
             </div>
             <div>
-              <p className={`text-xl md:text-2xl font-black uppercase ${ex.available ? ex.textColor : 'text-gray-400'}`}>
+              <p className={`text-base md:text-lg font-black uppercase ${ex.available ? ex.textColor : 'text-gray-400'}`}>
                 {ex.title}
               </p>
-              <p className="text-sm md:text-base font-bold text-gray-500 mt-1">{ex.description}</p>
+              <p className="text-xs md:text-sm font-bold text-gray-500 mt-0.5">{ex.description}</p>
             </div>
           </button>
         ))}

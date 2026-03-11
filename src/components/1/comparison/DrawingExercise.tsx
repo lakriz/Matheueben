@@ -2,7 +2,14 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 
 interface Props {
   digit: number;
-  onDone: () => void;
+  onDone: (isCorrect: boolean) => void;
+}
+
+interface Bounds {
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
 }
 
 // Stroke guide data: SVG-like path hints for digits 0-9
@@ -38,7 +45,49 @@ export default function DrawingExercise({ digit, onDone }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [hasDrawn, setHasDrawn] = useState(false);
+  const [frameResult, setFrameResult] = useState<boolean | null>(null);
   const lastPos = useRef<{ x: number; y: number } | null>(null);
+  const drawingBounds = useRef<Bounds | null>(null);
+
+  const updateBounds = (pos: { x: number; y: number }) => {
+    const current = drawingBounds.current;
+    if (!current) {
+      drawingBounds.current = { minX: pos.x, maxX: pos.x, minY: pos.y, maxY: pos.y };
+      return;
+    }
+    current.minX = Math.min(current.minX, pos.x);
+    current.maxX = Math.max(current.maxX, pos.x);
+    current.minY = Math.min(current.minY, pos.y);
+    current.maxY = Math.max(current.maxY, pos.y);
+  };
+
+  const fitsReferenceFrame = () => {
+    const canvas = canvasRef.current;
+    const bounds = drawingBounds.current;
+    if (!canvas || !bounds) return false;
+
+    const frame = {
+      minX: canvas.width * 0.2,
+      maxX: canvas.width * 0.8,
+      minY: canvas.height * 0.1,
+      maxY: canvas.height * 0.88,
+    };
+
+    const pad = 16;
+    const width = bounds.maxX - bounds.minX;
+    const height = bounds.maxY - bounds.minY;
+    const minWidth = canvas.width * 0.12;
+    const minHeight = canvas.height * 0.2;
+
+    if (width < minWidth || height < minHeight) return false;
+
+    return (
+      bounds.minX >= frame.minX - pad &&
+      bounds.maxX <= frame.maxX + pad &&
+      bounds.minY >= frame.minY - pad &&
+      bounds.maxY <= frame.maxY + pad
+    );
+  };
 
   // Paint the canvas background, guide lines, and ghost digit
   const paintCanvas = useCallback(() => {
@@ -90,6 +139,8 @@ export default function DrawingExercise({ digit, onDone }: Props) {
   const handleClear = () => {
     paintCanvas();
     setHasDrawn(false);
+    setFrameResult(null);
+    drawingBounds.current = null;
   };
 
   // Get canvas-relative position from event
@@ -110,7 +161,10 @@ export default function DrawingExercise({ digit, onDone }: Props) {
     canvas.setPointerCapture(e.pointerId);
     setIsDrawing(true);
     setHasDrawn(true);
-    lastPos.current = getPos(canvas, e);
+    setFrameResult(null);
+    const pos = getPos(canvas, e);
+    lastPos.current = pos;
+    updateBounds(pos);
   };
 
   const draw = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -135,6 +189,7 @@ export default function DrawingExercise({ digit, onDone }: Props) {
     ctx.stroke();
 
     lastPos.current = pos;
+    updateBounds(pos);
   };
 
   const endDraw = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -143,32 +198,41 @@ export default function DrawingExercise({ digit, onDone }: Props) {
     lastPos.current = null;
   };
 
+  const handleDone = () => {
+    const isCorrect = fitsReferenceFrame();
+    setFrameResult(isCorrect);
+    setTimeout(() => {
+      onDone(isCorrect);
+      setFrameResult(null);
+    }, 900);
+  };
+
   return (
-    <div className="flex flex-col items-center gap-5 p-4">
+    <div className="flex flex-col items-center gap-3 md:gap-5 p-3 md:p-4">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <span className="text-3xl">✏️</span>
-        <p className="text-2xl md:text-3xl font-black text-gray-700 uppercase">
+      <div className="flex items-center gap-3">
+        <span className="text-2xl md:text-3xl">✏️</span>
+        <p className="text-xl md:text-3xl font-black text-gray-700 uppercase">
           SCHREIBE DIE ZAHL:
         </p>
       </div>
 
       {/* Large digit example */}
-      <div className="bg-white rounded-3xl shadow-lg px-10 py-4 flex flex-col items-center">
-        <span className="text-9xl md:text-[10rem] font-black text-purple-700 leading-none select-none">
+      <div className="bg-white rounded-3xl shadow-lg px-6 md:px-10 py-3 flex flex-col items-center">
+        <span className="text-7xl md:text-[10rem] font-black text-purple-700 leading-none select-none">
           {digit}
         </span>
-        <span className="text-lg font-black text-gray-400 uppercase mt-1">
+        <span className="text-sm md:text-lg font-black text-gray-400 uppercase mt-1 text-center">
           {DIGIT_TIPS[digit]}
         </span>
       </div>
 
       {/* Stroke hints */}
-      <div className="flex gap-2 flex-wrap justify-center">
+      <div className="flex gap-1.5 md:gap-2 flex-wrap justify-center">
         {STROKE_HINTS[digit].map((hint, i) => (
           <span
             key={i}
-            className="bg-yellow-100 rounded-full px-4 py-1 text-base font-bold text-yellow-800"
+            className="bg-yellow-100 rounded-full px-3 md:px-4 py-1 text-xs md:text-base font-bold text-yellow-800"
           >
             {hint}
           </span>
@@ -181,7 +245,7 @@ export default function DrawingExercise({ digit, onDone }: Props) {
           ref={canvasRef}
           width={360}
           height={280}
-          className="block w-[360px] h-[280px] max-w-full cursor-crosshair"
+          className="block w-[260px] h-[190px] sm:w-[300px] sm:h-[220px] md:w-[360px] md:h-[280px] max-w-full cursor-crosshair"
           onPointerDown={startDraw}
           onPointerMove={draw}
           onPointerUp={endDraw}
@@ -191,17 +255,17 @@ export default function DrawingExercise({ digit, onDone }: Props) {
       </div>
 
       {/* Action buttons */}
-      <div className="flex gap-4 flex-wrap justify-center">
+      <div className="flex gap-2.5 md:gap-4 flex-wrap justify-center">
         <button
           onClick={handleClear}
-          className="bg-yellow-300 hover:bg-yellow-400 active:scale-95 text-yellow-900 text-2xl font-black py-4 px-8 rounded-full shadow-md transition-all uppercase"
+          className="bg-yellow-300 hover:bg-yellow-400 active:scale-95 text-yellow-900 text-lg md:text-2xl font-black py-2.5 md:py-4 px-5 md:px-8 rounded-full shadow-md transition-all uppercase"
         >
           🔄 NOCHMAL
         </button>
         <button
-          onClick={onDone}
+          onClick={handleDone}
           disabled={!hasDrawn}
-          className={`text-2xl font-black py-4 px-8 rounded-full shadow-md transition-all uppercase ${
+          className={`text-lg md:text-2xl font-black py-2.5 md:py-4 px-5 md:px-8 rounded-full shadow-md transition-all uppercase ${
             hasDrawn
               ? 'bg-green-400 hover:bg-green-500 active:scale-95 text-white'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
@@ -209,6 +273,16 @@ export default function DrawingExercise({ digit, onDone }: Props) {
         >
           ✅ FERTIG!
         </button>
+      </div>
+
+      <div className="min-h-8 text-lg md:text-2xl font-black uppercase">
+        {frameResult === null ? (
+          <span className="invisible">HALTER</span>
+        ) : frameResult ? (
+          <span className="text-green-600">✅ PASST GUT IN DEN RAHMEN!</span>
+        ) : (
+          <span className="text-red-500">❌ ETWAS AUSSERHALB - NOCHMAL VERSUCHEN!</span>
+        )}
       </div>
     </div>
   );

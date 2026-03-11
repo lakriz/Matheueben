@@ -90,7 +90,7 @@ export default function ExerciseSession({ onComplete }: Props) {
             {exercise.type === 'comparison'
               ? <ComparisonExercise key={currentIdx} num1={exercise.num1} num2={exercise.num2}
                   onAnswer={(c) => advance(c)} />
-              : <DrawingExercise key={currentIdx} digit={exercise.digit} onDone={() => advance(true)} />
+              : <DrawingExercise key={currentIdx} digit={exercise.digit} onDone={(isCorrect) => advance(isCorrect)} />
             }
           </div>
         </div>

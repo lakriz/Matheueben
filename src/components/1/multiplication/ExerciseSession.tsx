@@ -1,18 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
 import ProgressBar from './ProgressBar';
-import SubtractionExercise from './SubtractionExercise';
+import MultiplicationExercise from './MultiplicationExercise';
 import DrawingExercise from './DrawingExercise';
 
-interface SubtractionData {
-  type: 'subtraction';
+interface MultiplicationData {
+  type: 'multiplication';
   num1: number;
   num2: number;
   correctAnswer: number;
   choices: number[];
 }
 interface DrawingData { type: 'drawing'; digit: number; }
-type ExerciseData = SubtractionData | DrawingData;
-interface Props { onComplete: (score: number, total: number) => void; }
+type ExerciseData = MultiplicationData | DrawingData;
+interface Props { readonly onComplete: (score: number, total: number) => void; }
 
 function shuffle<T>(arr: T[]): T[] {
   const r = [...arr];
@@ -25,21 +25,27 @@ function shuffle<T>(arr: T[]): T[] {
 
 function generateChoices(correct: number, min: number, max: number): number[] {
   const s = new Set<number>([correct]);
-  while (s.size < 4) s.add(Math.floor(Math.random() * (max - min + 1)) + min);
+  while (s.size < 4) {
+    const v = Math.floor(Math.random() * (max - min + 1)) + min;
+    if (v >= 0) s.add(v);
+  }
   return shuffle(Array.from(s));
 }
 
 function buildSession(): ExerciseData[] {
+  // Core multiplication tables: 1, 2, 5, 10 – products up to 20
   const allPairs: [number, number][] = [];
-  for (let a = 1; a <= 10; a++)
-    for (let b = 0; b <= a; b++)
-      allPairs.push([a, b]);
+  for (const row of [1, 2, 5, 10]) {
+    for (let i = 1; i <= 10; i++) {
+      if (i * row <= 20) allPairs.push([i, row]);
+    }
+  }
 
-  const subtractions: SubtractionData[] = shuffle(allPairs).slice(0, 12).map(([n1, n2]) => {
-    const c = n1 - n2;
+  const mults: MultiplicationData[] = shuffle(allPairs).slice(0, 10).map(([n1, n2]) => {
+    const c = n1 * n2;
     return {
-      type: 'subtraction', num1: n1, num2: n2, correctAnswer: c,
-      choices: generateChoices(c, Math.max(0, c - 3), Math.min(10, c + 3)),
+      type: 'multiplication', num1: n1, num2: n2, correctAnswer: c,
+      choices: generateChoices(c, Math.max(0, c - 4), c + 4),
     };
   });
 
@@ -47,11 +53,11 @@ function buildSession(): ExerciseData[] {
     .map((d) => ({ type: 'drawing', digit: d }));
 
   const result: ExerciseData[] = [];
-  let si = 0; let di = 0;
-  while (si < subtractions.length || di < drawings.length) {
-    if (si < subtractions.length) result.push(subtractions[si++]);
-    if (si < subtractions.length) result.push(subtractions[si++]);
-    if (si < subtractions.length) result.push(subtractions[si++]);
+  let mi = 0; let di = 0;
+  while (mi < mults.length || di < drawings.length) {
+    if (mi < mults.length) result.push(mults[mi++]);
+    if (mi < mults.length) result.push(mults[mi++]);
+    if (mi < mults.length) result.push(mults[mi++]);
     if (di < drawings.length) result.push(drawings[di++]);
   }
   return result;
@@ -82,16 +88,15 @@ export default function ExerciseSession({ onComplete }: Props) {
   const exercise = exercises[currentIdx];
 
   return (
-    <div className="tablet-screen flex flex-col h-full bg-gradient-to-b from-blue-100 via-purple-50 to-yellow-100">
+    <div className="tablet-screen flex flex-col h-full bg-gradient-to-b from-pink-100 via-rose-50 to-orange-100">
       <div className="tablet-session-grid flex flex-1 flex-col p-2">
         <div className="tablet-session-side">
           <div className="flex justify-center px-4 pt-2">
-            {exercise.type === 'subtraction'
-              ? <span className="bg-blue-200 text-blue-800 text-lg md:text-xl font-black px-4 md:px-6 py-2 rounded-full uppercase">➖ RECHENAUFGABE</span>
+            {exercise.type === 'multiplication'
+              ? <span className="bg-pink-200 text-pink-800 text-lg md:text-xl font-black px-4 md:px-6 py-2 rounded-full uppercase">✖️ MALNEHMEN</span>
               : <span className="bg-yellow-200 text-yellow-800 text-lg md:text-xl font-black px-4 md:px-6 py-2 rounded-full uppercase">✏️ SCHREIB-ÜBUNG</span>
             }
           </div>
-
           <div className="tablet-progress p-3 pt-2">
             <ProgressBar current={currentIdx} total={exercises.length} timeLeft={timeLeft} />
           </div>
@@ -99,8 +104,8 @@ export default function ExerciseSession({ onComplete }: Props) {
 
         <div className="tablet-session-main flex-1 flex items-center justify-center p-1 md:p-2">
           <div className="exercise-scale-wrap">
-            {exercise.type === 'subtraction'
-              ? <SubtractionExercise key={currentIdx} num1={exercise.num1} num2={exercise.num2}
+            {exercise.type === 'multiplication'
+              ? <MultiplicationExercise key={currentIdx} num1={exercise.num1} num2={exercise.num2}
                   correctAnswer={exercise.correctAnswer} choices={exercise.choices}
                   onAnswer={(c) => advance(c)} />
               : <DrawingExercise key={currentIdx} digit={exercise.digit} onDone={(isCorrect) => advance(isCorrect)} />
@@ -111,3 +116,4 @@ export default function ExerciseSession({ onComplete }: Props) {
     </div>
   );
 }
+

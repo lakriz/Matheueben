@@ -110,7 +110,7 @@ export default function ExerciseSession({ onComplete }: Props) {
             {exercise.type === 'counting'
               ? <NumberExercise key={currentIdx} count={exercise.count} emoji={exercise.emoji}
                   label={exercise.label} choices={exercise.choices} onAnswer={(c) => advance(c)} />
-              : <DrawingExercise key={currentIdx} digit={exercise.digit} onDone={() => advance(true)} />
+              : <DrawingExercise key={currentIdx} digit={exercise.digit} onDone={(isCorrect) => advance(isCorrect)} />
             }
           </div>
         </div>

@@ -2,7 +2,14 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 
 interface Props {
   digit: number;
-  onDone: () => void;
+  onDone: (isCorrect: boolean) => void;
+}
+
+interface Bounds {
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
 }
 
 // Stroke guide data: SVG-like path hints for digits 0-9
@@ -38,7 +45,49 @@ export default function DrawingExercise({ digit, onDone }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [hasDrawn, setHasDrawn] = useState(false);
+  const [frameResult, setFrameResult] = useState<boolean | null>(null);
   const lastPos = useRef<{ x: number; y: number } | null>(null);
+  const drawingBounds = useRef<Bounds | null>(null);
+
+  const updateBounds = (pos: { x: number; y: number }) => {
+    const current = drawingBounds.current;
+    if (!current) {
+      drawingBounds.current = { minX: pos.x, maxX: pos.x, minY: pos.y, maxY: pos.y };
+      return;
+    }
+    current.minX = Math.min(current.minX, pos.x);
+    current.maxX = Math.max(current.maxX, pos.x);
+    current.minY = Math.min(current.minY, pos.y);
+    current.maxY = Math.max(current.maxY, pos.y);
+  };
+
+  const fitsReferenceFrame = () => {
+    const canvas = canvasRef.current;
+    const bounds = drawingBounds.current;
+    if (!canvas || !bounds) return false;
+
+    const frame = {
+      minX: canvas.width * 0.2,
+      maxX: canvas.width * 0.8,
+      minY: canvas.height * 0.1,
+      maxY: canvas.height * 0.88,
+    };
+
+    const pad = 16;
+    const width = bounds.maxX - bounds.minX;
+    const height = bounds.maxY - bounds.minY;
+    const minWidth = canvas.width * 0.12;
+    const minHeight = canvas.height * 0.2;
+
+    if (width < minWidth || height < minHeight) return false;
+
+    return (
+      bounds.minX >= frame.minX - pad &&
+      bounds.maxX <= frame.maxX + pad &&
+      bounds.minY >= frame.minY - pad &&
+      bounds.maxY <= frame.maxY + pad
+    );
+  };
 
   // Paint the canvas background, guide lines, and ghost digit
   const paintCanvas = useCallback(() => {
@@ -90,6 +139,8 @@ export default function DrawingExercise({ digit, onDone }: Props) {
   const handleClear = () => {
     paintCanvas();
     setHasDrawn(false);
+    setFrameResult(null);
+    drawingBounds.current = null;
   };
 
   // Get canvas-relative position from event
@@ -110,7 +161,10 @@ export default function DrawingExercise({ digit, onDone }: Props) {
     canvas.setPointerCapture(e.pointerId);
     setIsDrawing(true);
     setHasDrawn(true);
-    lastPos.current = getPos(canvas, e);
+    setFrameResult(null);
+    const pos = getPos(canvas, e);
+    lastPos.current = pos;
+    updateBounds(pos);
   };
 
   const draw = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -135,12 +189,22 @@ export default function DrawingExercise({ digit, onDone }: Props) {
     ctx.stroke();
 
     lastPos.current = pos;
+    updateBounds(pos);
   };
 
   const endDraw = (e: React.PointerEvent<HTMLCanvasElement>) => {
     e.preventDefault();
     setIsDrawing(false);
     lastPos.current = null;
+  };
+
+  const handleDone = () => {
+    const isCorrect = fitsReferenceFrame();
+    setFrameResult(isCorrect);
+    setTimeout(() => {
+      onDone(isCorrect);
+      setFrameResult(null);
+    }, 900);
   };
 
   return (
@@ -199,7 +263,7 @@ export default function DrawingExercise({ digit, onDone }: Props) {
           🔄 NOCHMAL
         </button>
         <button
-          onClick={onDone}
+          onClick={handleDone}
           disabled={!hasDrawn}
           className={`text-lg md:text-2xl font-black py-2.5 md:py-4 px-5 md:px-8 rounded-full shadow-md transition-all uppercase ${
             hasDrawn
@@ -209,6 +273,16 @@ export default function DrawingExercise({ digit, onDone }: Props) {
         >
           ✅ FERTIG!
         </button>
+      </div>
+
+      <div className="min-h-8 text-lg md:text-2xl font-black uppercase">
+        {frameResult === null ? (
+          <span className="invisible">HALTER</span>
+        ) : frameResult ? (
+          <span className="text-green-600">✅ PASST GUT IN DEN RAHMEN!</span>
+        ) : (
+          <span className="text-red-500">❌ ETWAS AUSSERHALB - NOCHMAL VERSUCHEN!</span>
+        )}
       </div>
     </div>
   );

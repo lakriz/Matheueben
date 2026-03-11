@@ -223,10 +223,10 @@ export default function ExerciseSession({ onComplete }: Props) {
               />
             ) : (
               <DrawingExercise
-                key={currentIdx}
-                digit={exercise.digit}
-                onDone={() => advance(true)}
-              />
+              key={currentIdx}
+              digit={exercise.digit}
+              onDone={(isCorrect) => advance(isCorrect)}
+            />
             )}
           </div>
         </div>
