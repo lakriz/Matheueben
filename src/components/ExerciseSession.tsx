@@ -2,6 +2,10 @@ import { useState, useEffect, useCallback } from 'react';
 import ProgressBar from './ProgressBar';
 import AdditionExercise from './AdditionExercise';
 import DrawingExercise from './DrawingExercise';
+import CountingAdditionExercise, {
+  CountingScenario,
+  CountingScenarioType,
+} from './CountingAdditionExercise';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -19,7 +23,14 @@ interface DrawingData {
   digit: number;
 }
 
-type ExerciseData = AdditionData | DrawingData;
+interface CountingAdditionData {
+  type: 'countingAddition';
+  scenario: CountingScenario;
+  correctAnswer: number;
+  choices: number[];
+}
+
+type ExerciseData = AdditionData | DrawingData | CountingAdditionData;
 
 interface Props {
   onComplete: (score: number, total: number) => void;
@@ -48,6 +59,9 @@ function generateChoices(correct: number, min: number, max: number): number[] {
 
 /** Build a balanced set of exercises for a 5-minute session */
 function buildSession(): ExerciseData[] {
+  const rand = (min: number, max: number) =>
+    Math.floor(Math.random() * (max - min + 1)) + min;
+
   // Addition pairs (grade 1: sums up to 10)
   const allPairs: [number, number][] = [
     [1, 1], [1, 2], [2, 1], [2, 2], [1, 3], [3, 1],
@@ -75,13 +89,49 @@ function buildSession(): ExerciseData[] {
   const digits = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]).slice(0, 4);
   const drawings: DrawingData[] = digits.map((d) => ({ type: 'drawing', digit: d }));
 
-  // Interleave: add, add, draw, add, add, draw, ...
+  // Counting addition exercises – one per scenario type, then pick 4
+  const allScenarioTypes: CountingScenarioType[] = [
+    'dice', 'dice3', 'apples', 'ladder', 'stars', 'flowers', 'fish', 'birds',
+  ];
+  const scenarioPool: CountingAdditionData[] = allScenarioTypes.map((stype) => {
+    let counts: number[];
+    if (stype === 'dice') {
+      const d1 = rand(1, 6);
+      const d2 = rand(1, Math.min(6, 10 - d1));
+      counts = [d1, d2];
+    } else if (stype === 'dice3') {
+      const d1 = rand(1, 3);
+      const d2 = rand(1, 3);
+      const d3 = rand(1, Math.min(3, 9 - d1 - d2));
+      counts = [d1, d2, d3];
+    } else if (stype === 'ladder') {
+      const r1 = rand(2, 5);
+      const r2 = rand(2, Math.min(8, 10 - r1));
+      counts = [r1, r2];
+    } else {
+      const c1 = rand(1, 6);
+      const c2 = rand(1, Math.min(7, 10 - c1));
+      counts = [c1, c2];
+    }
+    const correct = counts.reduce((a, b) => a + b, 0);
+    return {
+      type: 'countingAddition',
+      scenario: { type: stype, counts },
+      correctAnswer: correct,
+      choices: generateChoices(correct, Math.max(2, correct - 3), Math.min(10, correct + 3)),
+    };
+  });
+  const countings: CountingAdditionData[] = shuffle(scenarioPool).slice(0, 4);
+
+  // Interleave: add, add, count, draw, add, add, count, draw, …
   const result: ExerciseData[] = [];
   let ai = 0;
+  let ci = 0;
   let di = 0;
-  while (ai < additions.length || di < drawings.length) {
+  while (ai < additions.length || ci < countings.length || di < drawings.length) {
     if (ai < additions.length) result.push(additions[ai++]);
     if (ai < additions.length) result.push(additions[ai++]);
+    if (ci < countings.length) result.push(countings[ci++]);
     if (di < drawings.length) result.push(drawings[di++]);
   }
   return result;
@@ -137,6 +187,10 @@ export default function ExerciseSession({ onComplete }: Props) {
           <span className="bg-purple-200 text-purple-800 text-xl font-black px-6 py-2 rounded-full uppercase">
             ➕ RECHENAUFGABE
           </span>
+        ) : exercise.type === 'countingAddition' ? (
+          <span className="bg-orange-200 text-orange-800 text-xl font-black px-6 py-2 rounded-full uppercase">
+            🔢 ZÄHLEN & RECHNEN
+          </span>
         ) : (
           <span className="bg-blue-200 text-blue-800 text-xl font-black px-6 py-2 rounded-full uppercase">
             ✏️ SCHREIB-ÜBUNG
@@ -151,6 +205,14 @@ export default function ExerciseSession({ onComplete }: Props) {
             key={currentIdx}
             num1={exercise.num1}
             num2={exercise.num2}
+            correctAnswer={exercise.correctAnswer}
+            choices={exercise.choices}
+            onAnswer={(correct) => advance(correct)}
+          />
+        ) : exercise.type === 'countingAddition' ? (
+          <CountingAdditionExercise
+            key={currentIdx}
+            scenario={exercise.scenario}
             correctAnswer={exercise.correctAnswer}
             choices={exercise.choices}
             onAnswer={(correct) => advance(correct)}
