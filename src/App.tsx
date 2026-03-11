@@ -3,7 +3,6 @@ import { useAuth } from './auth/AuthContext';
 import { useTheme } from './theme/ThemeContext';
 import { type ThemeId } from './theme/ThemeContext';
 import { dataClient } from './lib/dataClient';
-import LoginScreen from './components/LoginScreen';
 import HomeScreen from './components/HomeScreen';
 import ProfileScreen from './components/ProfileScreen';
 import AdditionSession from './components/1/addition/ExerciseSession';
@@ -79,7 +78,7 @@ function App() {
 
   const resultProps = { score, total, onRestart: handleRestart, onHome: handleHome };
 
-  // Show loading spinner while checking auth
+  // Show loading spinner briefly while checking auth state
   if (loading) {
     return (
       <div className="tablet-fit flex items-center justify-center bg-gradient-to-b from-purple-200 to-yellow-100">
@@ -91,11 +90,7 @@ function App() {
     );
   }
 
-  // Not logged in → show login
-  if (!user) {
-    return <div className="tablet-fit"><LoginScreen /></div>;
-  }
-
+  // Always show app – login is optional via profile screen
   return (
     <div className="tablet-fit">
       {screen === 'home' && <HomeScreen onSelectExercise={handleSelectExercise} onProfile={handleProfile} />}

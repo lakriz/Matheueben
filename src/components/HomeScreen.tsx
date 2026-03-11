@@ -80,11 +80,13 @@ const CLASS_1_EXERCISES: ExerciseCard[] = [
 ];
 
 import { useTheme } from '../theme/ThemeContext';
+import { useAuth } from '../auth/AuthContext';
 
 // ...existing code...
 
 export default function HomeScreen({ onSelectExercise, onProfile }: Props) {
   const { theme } = useTheme();
+  const { user } = useAuth();
 
   return (
     <div className={`tablet-screen flex h-full flex-col items-center p-3 bg-gradient-to-b ${theme.homeBg}`}>
@@ -94,8 +96,12 @@ export default function HomeScreen({ onSelectExercise, onProfile }: Props) {
         <div className="text-5xl">{theme.emoji}</div>
         <button
           onClick={onProfile}
-          className="w-12 h-12 bg-white/80 hover:bg-white active:scale-95 rounded-2xl flex items-center justify-center text-2xl shadow-md transition-all border-2 border-white/60"
-          title="Mein Profil"
+          className={`w-12 h-12 active:scale-95 rounded-2xl flex items-center justify-center text-2xl shadow-md transition-all border-2 ${
+            user
+              ? `${theme.accentBg} border-transparent`
+              : 'bg-white/80 hover:bg-white border-white/60'
+          }`}
+          title={user ? 'Mein Profil' : 'Anmelden'}
         >
           👤
         </button>
