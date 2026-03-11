@@ -6,12 +6,111 @@
   touch-action: manipulation;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
 body {
-  overscroll-behavior: none;
+  margin: 0;
 }
 
 canvas {
   touch-action: none;
+}
+
+.tablet-fit {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.tablet-screen {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.tablet-compact-hide {
+  display: block;
+}
+
+.tablet-progress {
+  position: fixed;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 40;
+  width: min(46vw, 190px);
+  opacity: 0.95;
+}
+
+.tablet-session-grid {
+  width: 100%;
+  height: 100%;
+}
+
+.tablet-session-side {
+  width: 100%;
+}
+
+.tablet-session-main {
+  width: 100%;
+  min-width: 0;
+}
+
+.exercise-scale-wrap {
+  transform-origin: top center;
+  transform: scale(1);
+}
+
+@media (max-height: 930px) {
+  .tablet-fit { font-size: 13px; }
+  .exercise-scale-wrap { transform: scale(0.95); }
+}
+
+@media (max-height: 820px) {
+  .tablet-fit { font-size: 12px; }
+  .exercise-scale-wrap { transform: scale(0.88); }
+}
+
+@media (max-width: 430px) {
+  .tablet-progress {
+    width: min(44vw, 160px);
+    top: 0.4rem;
+    right: 0.4rem;
+  }
+  .exercise-scale-wrap { transform: scale(0.84); }
+  .tablet-fit .tablet-compact-hide { display: none; }
+}
+
+@media (orientation: landscape) and (max-height: 900px) {
+  .tablet-fit .tablet-screen {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+
+  .tablet-fit .tablet-session-grid {
+    display: grid;
+    grid-template-columns: minmax(210px, 280px) minmax(0, 1fr);
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .tablet-fit .tablet-session-side {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .tablet-fit .tablet-progress {
+    position: static;
+    width: 100%;
+    opacity: 1;
+  }
+
+  .tablet-fit .exercise-scale-wrap {
+    transform: scale(0.92);
+  }
 }
 
 @keyframes bounce-in {
