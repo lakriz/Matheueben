@@ -84,7 +84,7 @@ export default function ComparisonExercise({ num1, num2, onAnswer }: Props) {
       <div className="flex gap-5 flex-wrap justify-center">
         {SYMBOLS.map((sym) => (
           <button key={sym} onClick={() => handleChoice(sym)} className={getButtonClass(sym)}>
-            <span className="text-4xl md:text-5xl">{sym}</span>
+            <span className="text-5xl md:text-6xl">{sym}</span>
             <span className="text-sm md:text-base font-black uppercase">{SYMBOL_LABELS[sym]}</span>
           </button>
         ))}

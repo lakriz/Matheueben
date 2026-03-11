@@ -229,7 +229,7 @@ export default function CountingAdditionExercise({
 
   const getButtonClass = (value: number) => {
     const base =
-      'flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-3xl text-5xl md:text-6xl font-black shadow-lg transition-all duration-200 select-none ';
+      'flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-3xl text-6xl md:text-7xl font-black shadow-lg transition-all duration-200 select-none ';
     if (selected === null) {
       return base + theme.buttonIdle;
     }
