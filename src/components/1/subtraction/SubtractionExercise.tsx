@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTheme } from '../../../theme/ThemeContext';
 
 interface Props {
   num1: number;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function SubtractionExercise({ num1, num2, correctAnswer, choices, onAnswer }: Props) {
+  const { theme } = useTheme();
   const [selected, setSelected] = useState<number | null>(null);
   const feedbackText = selected === null
     ? ' '
@@ -30,7 +32,7 @@ export default function SubtractionExercise({ num1, num2, correctAnswer, choices
     const base =
       'flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-3xl text-5xl md:text-6xl font-black shadow-lg transition-all duration-200 select-none ';
     if (selected === null) {
-      return base + 'bg-blue-200 hover:bg-blue-300 active:scale-95 text-blue-900';
+      return base + theme.buttonIdle;
     }
     if (value === correctAnswer) return base + 'bg-green-400 text-white scale-110';
     if (value === selected) return base + 'bg-red-400 text-white animate-wiggle';

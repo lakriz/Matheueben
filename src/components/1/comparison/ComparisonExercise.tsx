@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTheme } from '../../../theme/ThemeContext';
 
 type Symbol = '>' | '<' | '=';
 
@@ -23,6 +24,7 @@ const SYMBOL_LABELS: Record<Symbol, string> = {
 };
 
 export default function ComparisonExercise({ num1, num2, onAnswer }: Props) {
+  const { theme } = useTheme();
   const [selected, setSelected] = useState<Symbol | null>(null);
   const correct = getCorrect(num1, num2);
   const feedbackText = selected === null
@@ -40,7 +42,7 @@ export default function ComparisonExercise({ num1, num2, onAnswer }: Props) {
   const getButtonClass = (sym: Symbol) => {
     const base =
       'flex flex-col items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-3xl font-black shadow-lg transition-all duration-200 select-none gap-1 ';
-    if (selected === null) return base + 'bg-orange-200 hover:bg-orange-300 active:scale-95 text-orange-900';
+    if (selected === null) return base + theme.buttonIdle;
     if (sym === correct) return base + 'bg-green-400 text-white scale-110';
     if (sym === selected) return base + 'bg-red-400 text-white animate-wiggle';
     return base + 'bg-gray-200 text-gray-400';

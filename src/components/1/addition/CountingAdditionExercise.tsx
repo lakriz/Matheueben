@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTheme } from '../../../theme/ThemeContext';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -203,8 +204,13 @@ export default function CountingAdditionExercise({
   choices,
   onAnswer,
 }: Props) {
+  const { theme } = useTheme();
   const [selected, setSelected] = useState<number | null>(null);
+  const [emojiIdx] = useState(() => Math.floor(Math.random() * theme.items.length));
+
   const config = SCENARIO_CONFIG[scenario.type];
+  const isEmojiScenario = scenario.type !== 'dice' && scenario.type !== 'dice3' && scenario.type !== 'ladder';
+  const resolvedConfig = isEmojiScenario ? { ...config, groupEmoji: theme.items[emojiIdx] } : config;
   const feedbackText = selected === null
     ? ' '
     : selected === correctAnswer
@@ -225,7 +231,7 @@ export default function CountingAdditionExercise({
     const base =
       'flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-3xl text-5xl md:text-6xl font-black shadow-lg transition-all duration-200 select-none ';
     if (selected === null) {
-      return base + 'bg-blue-200 hover:bg-blue-300 active:scale-95 text-blue-900';
+      return base + theme.buttonIdle;
     }
     if (value === correctAnswer) {
       return base + 'bg-green-400 text-white scale-110';
@@ -237,12 +243,10 @@ export default function CountingAdditionExercise({
   };
 
   const renderGroup = (count: number, index: number) => {
-    const label = config.groupLabel(index);
+    const label = resolvedConfig.groupLabel(index);
     const isDice = scenario.type === 'dice' || scenario.type === 'dice3';
     if (isDice) {
-      return (
-        <DiceFace key={index} value={count} label={label} small={scenario.type === 'dice3'} />
-      );
+      return <DiceFace key={index} value={count} label={label} small={scenario.type === 'dice3'} />;
     }
     if (scenario.type === 'ladder') {
       return <LadderSVG key={index} rungs={count} label={label} />;
@@ -251,19 +255,18 @@ export default function CountingAdditionExercise({
       <ItemGrid
         key={index}
         count={count}
-        emoji={config.groupEmoji ?? '❓'}
+        emoji={resolvedConfig.groupEmoji ?? '❓'}
         label={label}
-        bgClass={config.bgClass}
-        borderClass={config.borderClass}
+        bgClass={resolvedConfig.bgClass}
+        borderClass={resolvedConfig.borderClass}
       />
     );
   };
 
   return (
     <div className="flex flex-col items-center gap-6 p-4">
-      {/* Instruction */}
       <p className="text-xl md:text-2xl font-black text-gray-700 uppercase text-center">
-        {config.title}
+        {resolvedConfig.title}
       </p>
 
       {/* Visual groups */}

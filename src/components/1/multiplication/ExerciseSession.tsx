@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import ProgressBar from './ProgressBar';
 import MultiplicationExercise from './MultiplicationExercise';
 import DrawingExercise from './DrawingExercise';
+import { useTheme } from '../../../theme/ThemeContext';
 
 interface MultiplicationData {
   type: 'multiplication';
@@ -66,6 +67,7 @@ function buildSession(): ExerciseData[] {
 const SESSION_SECONDS = 300;
 
 export default function ExerciseSession({ onComplete }: Props) {
+  const { theme } = useTheme();
   const [exercises] = useState<ExerciseData[]>(() => buildSession());
   const [currentIdx, setCurrentIdx] = useState(0);
   const [score, setScore] = useState(0);
@@ -88,12 +90,12 @@ export default function ExerciseSession({ onComplete }: Props) {
   const exercise = exercises[currentIdx];
 
   return (
-    <div className="tablet-screen flex flex-col h-full bg-gradient-to-b from-pink-100 via-rose-50 to-orange-100">
+    <div className={`tablet-screen flex flex-col h-full bg-gradient-to-b ${theme.sessionBg}`}>
       <div className="tablet-session-grid flex flex-1 flex-col p-2">
         <div className="tablet-session-side">
           <div className="flex justify-center px-4 pt-2">
             {exercise.type === 'multiplication'
-              ? <span className="bg-pink-200 text-pink-800 text-lg md:text-xl font-black px-4 md:px-6 py-2 rounded-full uppercase">✖️ MALNEHMEN</span>
+              ? <span className={`${theme.accentLight} ${theme.accentText} text-lg md:text-xl font-black px-4 md:px-6 py-2 rounded-full uppercase`}>✖️ MALNEHMEN</span>
               : <span className="bg-yellow-200 text-yellow-800 text-lg md:text-xl font-black px-4 md:px-6 py-2 rounded-full uppercase">✏️ SCHREIB-ÜBUNG</span>
             }
           </div>
@@ -116,4 +118,3 @@ export default function ExerciseSession({ onComplete }: Props) {
     </div>
   );
 }
-

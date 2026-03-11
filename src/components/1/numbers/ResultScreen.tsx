@@ -1,3 +1,5 @@
+import { useTheme } from '../../../theme/ThemeContext';
+
 interface Props {
   readonly score: number;
   readonly total: number;
@@ -35,22 +37,23 @@ function getMessage(stars: number): { title: string; sub: string; emoji: string 
 }
 
 export default function ResultScreen({ score, total, onRestart, onHome }: Props) {
+  const { theme } = useTheme();
   const stars = getStars(score, total);
   const { title, sub, emoji } = getMessage(stars);
 
   return (
-    <div className="tablet-screen flex flex-col items-center justify-center min-h-screen p-4 text-center bg-gradient-to-b from-purple-200 via-pink-100 to-yellow-200">
+    <div className={`tablet-screen flex flex-col items-center justify-center h-full p-3 text-center bg-gradient-to-b ${theme.sessionBg}`}>
       {/* Trophy */}
-      <div className="text-7xl mb-2 animate-bounce">{emoji}</div>
+      <div className="text-6xl mb-1">{emoji}</div>
 
       {/* Title */}
-      <h1 className="text-4xl md:text-5xl font-black text-purple-700 uppercase mb-2 drop-shadow-md animate-bounce-in">
+      <h1 className="text-3xl md:text-5xl font-black text-purple-700 uppercase mb-1 drop-shadow-md animate-bounce-in">
         {title}
       </h1>
-      <p className="text-xl md:text-2xl font-black text-blue-600 uppercase mb-4">{sub}</p>
+      <p className="text-lg md:text-2xl font-black text-blue-600 uppercase mb-2">{sub}</p>
 
       {/* Stars */}
-      <div className="flex gap-3 mb-4">
+      <div className="flex gap-2 mb-2">
         {[1, 2, 3].map((i) => (
           <span
             key={i}
@@ -66,7 +69,7 @@ export default function ResultScreen({ score, total, onRestart, onHome }: Props)
       </div>
 
       {/* Score card */}
-      <div className="bg-white rounded-3xl shadow-lg px-8 py-4 mb-4 flex flex-col items-center gap-2">
+      <div className="bg-white rounded-3xl shadow-lg px-6 py-3 mb-3 flex flex-col items-center gap-1">
         <p className="text-2xl font-black text-gray-500 uppercase">DEIN ERGEBNIS</p>
         <div className="flex items-center gap-2">
           <span className="text-6xl md:text-7xl font-black text-green-500">{score}</span>
@@ -79,7 +82,7 @@ export default function ResultScreen({ score, total, onRestart, onHome }: Props)
       {/* Restart button */}
       <button
         onClick={onRestart}
-        className="bg-green-400 hover:bg-green-500 active:scale-95 active:bg-green-600 text-white text-2xl md:text-3xl font-black py-4 px-10 rounded-full shadow-xl transform hover:scale-105 transition-all uppercase"
+        className="bg-green-400 hover:bg-green-500 active:scale-95 active:bg-green-600 text-white text-xl md:text-3xl font-black py-3 px-8 rounded-full shadow-xl transform hover:scale-105 transition-all uppercase"
       >
         🔄 NOCHMAL SPIELEN!
       </button>
@@ -87,15 +90,15 @@ export default function ResultScreen({ score, total, onRestart, onHome }: Props)
       {/* Home button */}
       <button
         onClick={onHome}
-        className="mt-3 bg-white hover:bg-gray-50 active:scale-95 text-purple-600 text-xl md:text-2xl font-black py-3 px-8 rounded-full shadow-md border-4 border-purple-300 transform hover:scale-105 transition-all uppercase"
+        className="mt-2 bg-white hover:bg-gray-50 active:scale-95 text-purple-600 text-lg md:text-2xl font-black py-2.5 px-7 rounded-full shadow-md border-4 border-purple-300 transform hover:scale-105 transition-all uppercase"
       >
         🏠 ZURÜCK ZUR ÜBERSICHT
       </button>
 
       {/* Encouragement emojis */}
-      <div className="tablet-compact-hide flex gap-3 mt-5 text-4xl">
-        {['🌈', '⭐', '🎈', '⭐', '🌈'].map((e, i) => (
-          <span key={i} className="animate-bounce" style={{ animationDelay: `${i * 0.1}s` }}>
+      <div className="tablet-compact-hide flex gap-2 mt-3 text-3xl">
+        {theme.decorations.map((e, i) => (
+          <span key={`dec-${i}`} className="animate-bounce" style={{ animationDelay: `${i * 0.1}s` }}>
             {e}
           </span>
         ))}

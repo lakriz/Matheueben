@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTheme } from '../../../theme/ThemeContext';
 
 interface Props {
   readonly mode: 'double' | 'half';
@@ -8,11 +9,10 @@ interface Props {
   readonly onAnswer: (correct: boolean) => void;
 }
 
-const EMOJIS = ['🍎', '⭐', '🐟', '🎈', '🍓', '🦋', '🌸', '🐱'];
-
 export default function DoublingExercise({ mode, inputNumber, correctAnswer, choices, onAnswer }: Props) {
+  const { theme } = useTheme();
   const [selected, setSelected] = useState<number | null>(null);
-  const [emoji] = useState(() => EMOJIS[Math.floor(Math.random() * EMOJIS.length)]);
+  const [emoji] = useState(() => theme.items[Math.floor(Math.random() * theme.items.length)]);
 
   const feedbackText = selected === null
     ? ' '
@@ -29,7 +29,7 @@ export default function DoublingExercise({ mode, inputNumber, correctAnswer, cho
   const getButtonClass = (value: number) => {
     const base =
       'flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-3xl text-5xl md:text-6xl font-black shadow-lg transition-all duration-200 select-none ';
-    if (selected === null) return base + 'bg-rose-200 hover:bg-rose-300 active:scale-95 text-rose-900';
+    if (selected === null) return base + theme.buttonIdle;
     if (value === correctAnswer) return base + 'bg-green-400 text-white scale-110';
     if (value === selected) return base + 'bg-red-400 text-white animate-wiggle';
     return base + 'bg-gray-200 text-gray-400';
@@ -55,13 +55,13 @@ export default function DoublingExercise({ mode, inputNumber, correctAnswer, cho
       <div className="flex flex-col items-center gap-2">
         {isDouble ? (
           <div className="flex gap-4 items-center">
-            <div className="bg-rose-50 border-2 border-rose-300 rounded-2xl px-3 py-2 flex gap-1 flex-wrap justify-center" style={{ maxWidth: 140 }}>
+            <div className={`${theme.accentLight} border-2 ${theme.accentBorder} rounded-2xl px-3 py-2 flex gap-1 flex-wrap justify-center`} style={{ maxWidth: 140 }}>
               {Array.from({ length: inputNumber }, (_, i) => (
                 <span key={i} className="text-2xl md:text-3xl select-none">{emoji}</span>
               ))}
             </div>
-            <span className="text-4xl font-black text-rose-400">+</span>
-            <div className="bg-rose-50 border-2 border-rose-300 rounded-2xl px-3 py-2 flex gap-1 flex-wrap justify-center" style={{ maxWidth: 140 }}>
+            <span className={`text-4xl font-black ${theme.accentText}`}>+</span>
+            <div className={`${theme.accentLight} border-2 ${theme.accentBorder} rounded-2xl px-3 py-2 flex gap-1 flex-wrap justify-center`} style={{ maxWidth: 140 }}>
               {Array.from({ length: inputNumber }, (_, i) => (
                 <span key={i} className="text-2xl md:text-3xl select-none">{emoji}</span>
               ))}

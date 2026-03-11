@@ -1,3 +1,5 @@
+import { useTheme } from '../../../theme/ThemeContext';
+
 interface Props {
   readonly score: number;
   readonly total: number;
@@ -35,11 +37,12 @@ function getMessage(stars: number): { title: string; sub: string; emoji: string 
 }
 
 export default function ResultScreen({ score, total, onRestart, onHome }: Props) {
+  const { theme } = useTheme();
   const stars = getStars(score, total);
   const { title, sub, emoji } = getMessage(stars);
 
   return (
-    <div className="tablet-screen flex flex-col items-center justify-center h-full p-3 text-center bg-gradient-to-b from-purple-200 via-pink-100 to-yellow-200">
+    <div className={`tablet-screen flex flex-col items-center justify-center h-full p-3 text-center bg-gradient-to-b ${theme.sessionBg}`}>
       {/* Trophy */}
       <div className="text-6xl mb-1">{emoji}</div>
 
@@ -94,8 +97,8 @@ export default function ResultScreen({ score, total, onRestart, onHome }: Props)
 
       {/* Encouragement emojis */}
       <div className="tablet-compact-hide flex gap-2 mt-3 text-3xl">
-        {['🌈', '⭐', '🎈', '⭐', '🌈'].map((e, i) => (
-          <span key={i} className="animate-bounce" style={{ animationDelay: `${i * 0.1}s` }}>
+        {theme.decorations.map((e, i) => (
+          <span key={`dec-${i}`} className="animate-bounce" style={{ animationDelay: `${i * 0.1}s` }}>
             {e}
           </span>
         ))}

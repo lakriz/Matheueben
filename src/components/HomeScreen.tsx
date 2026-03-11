@@ -78,22 +78,34 @@ const CLASS_1_EXERCISES: ExerciseCard[] = [
   },
 ];
 
+import { useTheme } from '../theme/ThemeContext';
+import ThemePicker from './ThemePicker';
+
+// ...existing code...
+
 export default function HomeScreen({ onSelectExercise }: Props) {
+  const { theme } = useTheme();
+
   return (
-    <div className="tablet-screen flex h-full flex-col items-center p-3 bg-gradient-to-b from-yellow-200 via-pink-100 to-blue-200">
+    <div className={`tablet-screen flex h-full flex-col items-center p-3 bg-gradient-to-b ${theme.homeBg}`}>
       {/* Header */}
-      <div className="text-5xl mb-1 mt-1">🌈</div>
+      <div className="text-5xl mb-1 mt-1">{theme.emoji}</div>
       <h1 className="text-4xl md:text-5xl font-black text-purple-700 mb-1 uppercase leading-tight drop-shadow-md text-center">
         MATHE ÜBEN!
       </h1>
-      <p className="text-xl md:text-2xl font-black text-blue-600 mb-3 uppercase">
+      <p className="text-xl md:text-2xl font-black text-blue-600 mb-2 uppercase">
         WAS MÖCHTEST DU ÜBEN?
       </p>
 
+      {/* Theme picker */}
+      <div className="w-full max-w-4xl mb-2">
+        <ThemePicker />
+      </div>
+
       {/* Class badge */}
-      <div className="flex items-center gap-2 bg-yellow-400 rounded-2xl px-6 py-2 shadow-md mb-3">
+      <div className={`flex items-center gap-2 ${theme.accentBg} rounded-2xl px-6 py-2 shadow-md mb-2`}>
         <span className="text-3xl">🎒</span>
-        <span className="text-xl font-black text-yellow-900 uppercase">1. KLASSE</span>
+        <span className="text-xl font-black text-white uppercase">1. KLASSE</span>
       </div>
 
       {/* Exercise cards */}
@@ -132,11 +144,11 @@ export default function HomeScreen({ onSelectExercise }: Props) {
         ))}
       </div>
 
-      {/* Decorative stars */}
+      {/* Decorative theme items */}
       <div className="tablet-compact-hide flex gap-2 text-2xl mt-auto">
-        {['⭐', '🌟', '✨', '🌟', '⭐'].map((star, i) => (
-          <span key={i} style={{ animationDelay: `${i * 0.1}s` }} className="animate-bounce">
-            {star}
+        {theme.decorations.map((dec, i) => (
+          <span key={`dec-${i}`} style={{ animationDelay: `${i * 0.1}s` }} className="animate-bounce">
+            {dec}
           </span>
         ))}
       </div>

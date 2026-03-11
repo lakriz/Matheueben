@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTheme } from '../../../theme/ThemeContext';
 
 interface Props {
   readonly num1: number | null; // null = gap on the left
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function ComplementExercise({ num1, num2, target, correctAnswer, choices, onAnswer }: Props) {
+  const { theme } = useTheme();
   const [selected, setSelected] = useState<number | null>(null);
   const known = num1 ?? num2 ?? 0;
   const gapIsLeft = num1 === null;
@@ -29,7 +31,7 @@ export default function ComplementExercise({ num1, num2, target, correctAnswer, 
   const getButtonClass = (value: number) => {
     const base =
       'flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-3xl text-5xl md:text-6xl font-black shadow-lg transition-all duration-200 select-none ';
-    if (selected === null) return base + 'bg-teal-200 hover:bg-teal-300 active:scale-95 text-teal-900';
+    if (selected === null) return base + theme.buttonIdle;
     if (value === correctAnswer) return base + 'bg-green-400 text-white scale-110';
     if (value === selected) return base + 'bg-red-400 text-white animate-wiggle';
     return base + 'bg-gray-200 text-gray-400';
@@ -39,12 +41,12 @@ export default function ComplementExercise({ num1, num2, target, correctAnswer, 
     <div className="flex flex-col items-center gap-6 p-4">
       {/* Problem display */}
       <div className="bg-white rounded-3xl shadow-lg px-8 py-6 flex items-center gap-4">
-        <span className={`text-7xl md:text-8xl font-black ${gapIsLeft ? 'text-orange-400' : 'text-teal-700'}`}>
+        <span className={`text-7xl md:text-8xl font-black ${gapIsLeft ? 'text-orange-400' : theme.accentText}`}>
           {gapIsLeft ? '?' : num1}
         </span>
-        <span className="text-6xl md:text-7xl font-black text-teal-500">+</span>
-        <span className={`text-7xl md:text-8xl font-black ${!gapIsLeft ? 'text-orange-400' : 'text-teal-700'}`}>
-          {!gapIsLeft ? '?' : num2}
+        <span className={`text-6xl md:text-7xl font-black ${theme.accentText}`}>+</span>
+        <span className={`text-7xl md:text-8xl font-black ${gapIsLeft ? theme.accentText : 'text-orange-400'}`}>
+          {gapIsLeft ? num2 : '?'}
         </span>
         <span className="text-6xl md:text-7xl font-black text-gray-400">=</span>
         <span className="text-7xl md:text-8xl font-black text-purple-700">{target}</span>
