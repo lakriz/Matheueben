@@ -35,7 +35,7 @@ function App() {
   const resultProps = { score, total, onRestart: handleRestart, onHome: handleHome };
 
   return (
-    <div className="tablet-fit h-screen">
+    <div className="tablet-fit">
       {screen === 'home' && <HomeScreen onSelectExercise={handleSelectExercise} />}
 
       {screen === 'session' && selectedExercise === '1/addition' && (

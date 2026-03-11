@@ -21,14 +21,25 @@ canvas {
 }
 
 .tablet-fit {
-  height: 100dvh;
+  height: 100svh;
+  min-height: 100svh;
+  max-height: 100svh;
   overflow: hidden;
+}
+
+@supports (height: 100dvh) {
+  .tablet-fit {
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+  }
 }
 
 .tablet-screen {
   position: relative;
   height: 100%;
   overflow: hidden;
+  padding-top: max(env(safe-area-inset-top), 0px);
 }
 
 .tablet-compact-hide {
@@ -83,12 +94,7 @@ canvas {
   .tablet-fit .tablet-compact-hide { display: none; }
 }
 
-@media (orientation: landscape) and (max-height: 900px) {
-  .tablet-fit .tablet-screen {
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
-  }
-
+@media (min-width: 768px) and (max-width: 1366px) and (orientation: landscape) {
   .tablet-fit .tablet-session-grid {
     display: grid;
     grid-template-columns: minmax(210px, 280px) minmax(0, 1fr);
@@ -106,6 +112,26 @@ canvas {
     position: static;
     width: 100%;
     opacity: 1;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1366px) and (orientation: portrait) {
+  .tablet-fit .tablet-session-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tablet-fit .tablet-session-side,
+  .tablet-fit .tablet-session-main {
+    width: 100%;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 900px) {
+  .tablet-fit .tablet-screen {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
   }
 
   .tablet-fit .exercise-scale-wrap {
