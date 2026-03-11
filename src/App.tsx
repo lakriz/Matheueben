@@ -1,5 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAuth } from './auth/AuthContext';
+import { useTheme } from './theme/ThemeContext';
+import { type ThemeId } from './theme/ThemeContext';
+import { dataClient } from './lib/dataClient';
+import LoginScreen from './components/LoginScreen';
 import HomeScreen from './components/HomeScreen';
+import ProfileScreen from './components/ProfileScreen';
 import AdditionSession from './components/1/addition/ExerciseSession';
 import SubtractionSession from './components/1/subtraction/ExerciseSession';
 import NumbersSession from './components/1/numbers/ExerciseSession';
@@ -15,56 +21,93 @@ import MultiplicationResult from './components/1/multiplication/ResultScreen';
 import ComplementResult from './components/1/complement/ResultScreen';
 import DoublingResult from './components/1/doubling/ResultScreen';
 
-type AppScreen = 'home' | 'session' | 'result';
+type AppScreen = 'home' | 'session' | 'result' | 'profile';
 
 function App() {
+  const { user, loading } = useAuth();
+  const { setThemeId } = useTheme();
   const [screen, setScreen] = useState<AppScreen>('home');
   const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
   const [sessionKey, setSessionKey] = useState(0);
 
+  // Load saved theme from UserProfile on login
+  useEffect(() => {
+    if (!user) return;
+    const load = async () => {
+      try {
+        const { data: profiles } = await dataClient.models.UserProfile.list({ limit: 1 });
+        if (profiles && profiles.length > 0 && profiles[0].themeId) {
+          setThemeId(profiles[0].themeId as ThemeId);
+        }
+      } catch (e) {
+        console.error('Could not load user profile', e);
+      }
+    };
+    load();
+  }, [user, setThemeId]);
+
   const handleSelectExercise = (exerciseId: string) => {
     setSelectedExercise(exerciseId);
     setScreen('session');
   };
 
-  const handleSessionComplete = (finalScore: number, totalExercises: number) => {
+  const handleSessionComplete = async (finalScore: number, totalExercises: number) => {
     setScore(finalScore);
     setTotal(totalExercises);
     setScreen('result');
+    // Persist result
+    if (user && selectedExercise) {
+      try {
+        await dataClient.models.ExerciseResult.create({
+          userId: user.userId,
+          exerciseId: selectedExercise,
+          score: finalScore,
+          total: totalExercises,
+          playedAt: new Date().toISOString(),
+        });
+      } catch (e) {
+        console.error('Could not save result', e);
+      }
+    }
   };
 
   const handleRestart = () => { setSessionKey((k) => k + 1); setScreen('session'); };
   const handleHome = () => setScreen('home');
+  const handleProfile = () => setScreen('profile');
 
   const resultProps = { score, total, onRestart: handleRestart, onHome: handleHome };
 
+  // Show loading spinner while checking auth
+  if (loading) {
+    return (
+      <div className="tablet-fit flex items-center justify-center bg-gradient-to-b from-purple-200 to-yellow-100">
+        <div className="flex flex-col items-center gap-4">
+          <span className="text-6xl animate-bounce">🌈</span>
+          <p className="text-2xl font-black text-purple-700 uppercase">LADEN...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Not logged in → show login
+  if (!user) {
+    return <div className="tablet-fit"><LoginScreen /></div>;
+  }
+
   return (
     <div className="tablet-fit">
-      {screen === 'home' && <HomeScreen onSelectExercise={handleSelectExercise} />}
+      {screen === 'home' && <HomeScreen onSelectExercise={handleSelectExercise} onProfile={handleProfile} />}
+      {screen === 'profile' && <ProfileScreen onHome={handleHome} />}
 
-      {screen === 'session' && selectedExercise === '1/addition' && (
-        <AdditionSession key={sessionKey} onComplete={handleSessionComplete} />
-      )}
-      {screen === 'session' && selectedExercise === '1/subtraction' && (
-        <SubtractionSession key={sessionKey} onComplete={handleSessionComplete} />
-      )}
-      {screen === 'session' && selectedExercise === '1/numbers' && (
-        <NumbersSession key={sessionKey} onComplete={handleSessionComplete} />
-      )}
-      {screen === 'session' && selectedExercise === '1/comparison' && (
-        <ComparisonSession key={sessionKey} onComplete={handleSessionComplete} />
-      )}
-      {screen === 'session' && selectedExercise === '1/multiplication' && (
-        <MultiplicationSession key={sessionKey} onComplete={handleSessionComplete} />
-      )}
-      {screen === 'session' && selectedExercise === '1/complement' && (
-        <ComplementSession key={sessionKey} onComplete={handleSessionComplete} />
-      )}
-      {screen === 'session' && selectedExercise === '1/doubling' && (
-        <DoublingSession key={sessionKey} onComplete={handleSessionComplete} />
-      )}
+      {screen === 'session' && selectedExercise === '1/addition' && <AdditionSession key={sessionKey} onComplete={handleSessionComplete} />}
+      {screen === 'session' && selectedExercise === '1/subtraction' && <SubtractionSession key={sessionKey} onComplete={handleSessionComplete} />}
+      {screen === 'session' && selectedExercise === '1/numbers' && <NumbersSession key={sessionKey} onComplete={handleSessionComplete} />}
+      {screen === 'session' && selectedExercise === '1/comparison' && <ComparisonSession key={sessionKey} onComplete={handleSessionComplete} />}
+      {screen === 'session' && selectedExercise === '1/multiplication' && <MultiplicationSession key={sessionKey} onComplete={handleSessionComplete} />}
+      {screen === 'session' && selectedExercise === '1/complement' && <ComplementSession key={sessionKey} onComplete={handleSessionComplete} />}
+      {screen === 'session' && selectedExercise === '1/doubling' && <DoublingSession key={sessionKey} onComplete={handleSessionComplete} />}
 
       {screen === 'result' && selectedExercise === '1/addition' && <AdditionResult {...resultProps} />}
       {screen === 'result' && selectedExercise === '1/subtraction' && <SubtractionResult {...resultProps} />}
