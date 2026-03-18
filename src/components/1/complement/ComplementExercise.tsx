@@ -30,7 +30,7 @@ export default function ComplementExercise({ num1, num2, target, correctAnswer, 
 
   const getButtonClass = (value: number) => {
     const base =
-      'flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-3xl text-6xl md:text-7xl font-black shadow-lg transition-all duration-200 select-none ';
+      'flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-3xl font-black shadow-lg transition-all duration-200 select-none ';
     if (selected === null) return base + theme.buttonIdle;
     if (value === correctAnswer) return base + 'bg-green-400 text-white scale-110';
     if (value === selected) return base + 'bg-red-400 text-white animate-wiggle';
@@ -79,7 +79,7 @@ export default function ComplementExercise({ num1, num2, target, correctAnswer, 
       <div className="grid grid-cols-2 gap-5">
         {choices.map((value) => (
           <button key={value} onClick={() => handleChoice(value)} className={getButtonClass(value)}>
-            {value}
+            <span className="text-7xl md:text-8xl">{value}</span>
           </button>
         ))}
       </div>
