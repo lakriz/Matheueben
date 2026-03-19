@@ -96,13 +96,13 @@ function App() {
       {screen === 'home' && <HomeScreen onSelectExercise={handleSelectExercise} onProfile={handleProfile} />}
       {screen === 'profile' && <ProfileScreen onHome={handleHome} />}
 
-      {screen === 'session' && selectedExercise === '1/addition' && <AdditionSession key={sessionKey} onComplete={handleSessionComplete} />}
-      {screen === 'session' && selectedExercise === '1/subtraction' && <SubtractionSession key={sessionKey} onComplete={handleSessionComplete} />}
-      {screen === 'session' && selectedExercise === '1/numbers' && <NumbersSession key={sessionKey} onComplete={handleSessionComplete} />}
-      {screen === 'session' && selectedExercise === '1/comparison' && <ComparisonSession key={sessionKey} onComplete={handleSessionComplete} />}
-      {screen === 'session' && selectedExercise === '1/multiplication' && <MultiplicationSession key={sessionKey} onComplete={handleSessionComplete} />}
-      {screen === 'session' && selectedExercise === '1/complement' && <ComplementSession key={sessionKey} onComplete={handleSessionComplete} />}
-      {screen === 'session' && selectedExercise === '1/doubling' && <DoublingSession key={sessionKey} onComplete={handleSessionComplete} />}
+      {screen === 'session' && selectedExercise === '1/addition' && <AdditionSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '1/subtraction' && <SubtractionSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '1/numbers' && <NumbersSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '1/comparison' && <ComparisonSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '1/multiplication' && <MultiplicationSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '1/complement' && <ComplementSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '1/doubling' && <DoublingSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
 
       {screen === 'result' && selectedExercise === '1/addition' && <AdditionResult {...resultProps} />}
       {screen === 'result' && selectedExercise === '1/subtraction' && <SubtractionResult {...resultProps} />}
