@@ -3,6 +3,7 @@ import ProgressBar from './ProgressBar';
 import SubtractionExercise from './SubtractionExercise';
 import DrawingExercise from './DrawingExercise';
 import { useTheme } from '../../../theme/ThemeContext';
+import CancelButton from '../../CancelButton';
 
 interface SubtractionData {
   type: 'subtraction';
@@ -13,7 +14,7 @@ interface SubtractionData {
 }
 interface DrawingData { type: 'drawing'; digit: number; }
 type ExerciseData = SubtractionData | DrawingData;
-interface Props { onComplete: (score: number, total: number) => void; }
+interface Props { onComplete: (score: number, total: number) => void; onCancel: () => void; }
 
 function shuffle<T>(arr: T[]): T[] {
   const r = [...arr];
@@ -60,7 +61,7 @@ function buildSession(): ExerciseData[] {
 
 const SESSION_SECONDS = 300;
 
-export default function ExerciseSession({ onComplete }: Props) {
+export default function ExerciseSession({ onComplete, onCancel }: Props) {
   const { theme } = useTheme();
   const [exercises] = useState<ExerciseData[]>(() => buildSession());
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -87,11 +88,12 @@ export default function ExerciseSession({ onComplete }: Props) {
     <div className={`tablet-screen flex flex-col h-full bg-gradient-to-b ${theme.sessionBg}`}>
       <div className="tablet-session-grid flex flex-1 flex-col p-2">
         <div className="tablet-session-side">
-          <div className="flex justify-center px-4 pt-2">
+          <div className="flex items-center justify-between px-4 pt-2">
             {exercise.type === 'subtraction'
               ? <span className={`${theme.accentLight} ${theme.accentText} text-lg md:text-xl font-black px-4 md:px-6 py-2 rounded-full uppercase`}>➖ RECHENAUFGABE</span>
               : <span className="bg-yellow-200 text-yellow-800 text-lg md:text-xl font-black px-4 md:px-6 py-2 rounded-full uppercase">✏️ SCHREIB-ÜBUNG</span>
             }
+            <CancelButton onCancel={onCancel} />
           </div>
 
           <div className="tablet-progress p-3 pt-2">

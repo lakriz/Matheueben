@@ -7,6 +7,7 @@ import CountingAdditionExercise, {
   CountingScenarioType,
 } from './CountingAdditionExercise';
 import { useTheme } from '../../../theme/ThemeContext';
+import CancelButton from '../../CancelButton';
 
 
 // ---------------------------------------------------------------------------
@@ -36,6 +37,7 @@ type ExerciseData = AdditionData | DrawingData | CountingAdditionData;
 
 interface Props {
   onComplete: (score: number, total: number) => void;
+  onCancel: () => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -144,7 +146,7 @@ const SESSION_SECONDS = 300; // 5 minutes
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
-export default function ExerciseSession({ onComplete }: Props) {
+export default function ExerciseSession({ onComplete, onCancel }: Props) {
   const { theme } = useTheme();
   const [exercises] = useState<ExerciseData[]>(() => buildSession());
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -182,7 +184,7 @@ export default function ExerciseSession({ onComplete }: Props) {
       <div className="tablet-session-grid flex flex-1 flex-col p-2">
         <div className="tablet-session-side">
           {/* Exercise type badge */}
-          <div className="flex justify-center px-4 pt-2">
+          <div className="flex items-center justify-between px-4 pt-2">
             {exercise.type === 'addition' ? (
               <span className={`${theme.accentLight} ${theme.accentText} text-lg md:text-xl font-black px-4 md:px-6 py-2 rounded-full uppercase`}>
                 ➕ RECHENAUFGABE
@@ -196,6 +198,7 @@ export default function ExerciseSession({ onComplete }: Props) {
                 ✏️ SCHREIB-ÜBUNG
               </span>
             )}
+            <CancelButton onCancel={onCancel} />
           </div>
 
           <div className="tablet-progress p-3 pt-2">
