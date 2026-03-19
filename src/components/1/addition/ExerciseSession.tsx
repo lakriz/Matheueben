@@ -184,7 +184,8 @@ export default function ExerciseSession({ onComplete, onCancel }: Props) {
       <div className="tablet-session-grid flex flex-1 flex-col p-2">
         <div className="tablet-session-side">
           {/* Exercise type badge */}
-          <div className="flex items-center justify-between px-4 pt-2">
+          <div className="session-header">
+            <CancelButton onCancel={onCancel} />
             {exercise.type === 'addition' ? (
               <span className={`${theme.accentLight} ${theme.accentText} text-lg md:text-xl font-black px-4 md:px-6 py-2 rounded-full uppercase`}>
                 ➕ RECHENAUFGABE
@@ -198,7 +199,6 @@ export default function ExerciseSession({ onComplete, onCancel }: Props) {
                 ✏️ SCHREIB-ÜBUNG
               </span>
             )}
-            <CancelButton onCancel={onCancel} />
           </div>
 
           <div className="tablet-progress p-3 pt-2">

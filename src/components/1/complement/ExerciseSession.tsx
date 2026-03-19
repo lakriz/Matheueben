@@ -97,12 +97,12 @@ export default function ExerciseSession({ onComplete, onCancel }: Props) {
     <div className={`tablet-screen flex flex-col h-full bg-gradient-to-b ${theme.sessionBg}`}>
       <div className="tablet-session-grid flex flex-1 flex-col p-2">
         <div className="tablet-session-side">
-          <div className="flex items-center justify-between px-4 pt-2">
+          <div className="session-header">
+            <CancelButton onCancel={onCancel} />
             {exercise.type === 'complement'
               ? <span className={`${theme.accentLight} ${theme.accentText} text-lg md:text-xl font-black px-4 md:px-6 py-2 rounded-full uppercase`}>🧩 ERGÄNZEN</span>
               : <span className="bg-yellow-200 text-yellow-800 text-lg md:text-xl font-black px-4 md:px-6 py-2 rounded-full uppercase">✏️ SCHREIB-ÜBUNG</span>
             }
-            <CancelButton onCancel={onCancel} />
           </div>
           <div className="tablet-progress p-3 pt-2">
             <ProgressBar current={currentIdx} total={exercises.length} timeLeft={timeLeft} />

@@ -94,6 +94,17 @@ canvas {
   .tablet-fit .tablet-compact-hide { display: none; }
 }
 
+/* session-header: cancel button placed first so it stays on the left,
+   away from the fixed timer card (top-right) on mobile and desktop */
+.session-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+}
+
 @media (min-width: 768px) and (max-width: 1366px) and (orientation: landscape) {
   .tablet-fit .tablet-session-grid {
     display: grid;
@@ -112,6 +123,12 @@ canvas {
     position: static;
     width: 100%;
     opacity: 1;
+  }
+
+  /* In landscape tablet, progress is static – restore space-between for the header */
+  .tablet-fit .session-header {
+    justify-content: space-between;
+    gap: 0;
   }
 }
 
