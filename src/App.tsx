@@ -5,6 +5,7 @@ import { type ThemeId } from './theme/ThemeContext';
 import { dataClient } from './lib/dataClient';
 import HomeScreen from './components/HomeScreen';
 import ProfileScreen from './components/ProfileScreen';
+// Grade 1
 import AdditionSession from './components/1/addition/ExerciseSession';
 import SubtractionSession from './components/1/subtraction/ExerciseSession';
 import NumbersSession from './components/1/numbers/ExerciseSession';
@@ -25,6 +26,32 @@ import DoublingResult from './components/1/doubling/ResultScreen';
 import NumberRange20Result from './components/1/numberrange20/ResultScreen';
 import PlusMinusResult from './components/1/plusminus/ResultScreen';
 import WordProblemsResult from './components/1/wordproblems/ResultScreen';
+// Grade 2
+import Addition100Session from './components/2/addition100/ExerciseSession';
+import Subtraction100Session from './components/2/subtraction100/ExerciseSession';
+import EinmaleinsSession from './components/2/einmaleins/ExerciseSession';
+import Division2Session from './components/2/division/ExerciseSession';
+import NumberRange100Session from './components/2/numberrange100/ExerciseSession';
+import WordProblems2Session from './components/2/wordproblems/ExerciseSession';
+import Addition100Result from './components/2/addition100/ResultScreen';
+import Subtraction100Result from './components/2/subtraction100/ResultScreen';
+import EinmaleinsResult from './components/2/einmaleins/ResultScreen';
+import Division2Result from './components/2/division/ResultScreen';
+import NumberRange100Result from './components/2/numberrange100/ResultScreen';
+import WordProblems2Result from './components/2/wordproblems/ResultScreen';
+// Grade 3
+import Addition1000Session from './components/3/addition1000/ExerciseSession';
+import Subtraction1000Session from './components/3/subtraction1000/ExerciseSession';
+import Multiplication3Session from './components/3/multiplication/ExerciseSession';
+import Division3Session from './components/3/division/ExerciseSession';
+import NumberRange1000Session from './components/3/numberrange1000/ExerciseSession';
+import WordProblems3Session from './components/3/wordproblems/ExerciseSession';
+import Addition1000Result from './components/3/addition1000/ResultScreen';
+import Subtraction1000Result from './components/3/subtraction1000/ResultScreen';
+import Multiplication3Result from './components/3/multiplication/ResultScreen';
+import Division3Result from './components/3/division/ResultScreen';
+import NumberRange1000Result from './components/3/numberrange1000/ResultScreen';
+import WordProblems3Result from './components/3/wordproblems/ResultScreen';
 
 type AppScreen = 'home' | 'session' | 'result' | 'profile';
 
@@ -113,6 +140,20 @@ function App() {
       {screen === 'session' && selectedExercise === '1/plusminus' && <PlusMinusSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
       {screen === 'session' && selectedExercise === '1/wordproblems' && <WordProblemsSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
 
+      {screen === 'session' && selectedExercise === '2/addition100' && <Addition100Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '2/subtraction100' && <Subtraction100Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '2/einmaleins' && <EinmaleinsSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '2/division' && <Division2Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '2/numberrange100' && <NumberRange100Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '2/wordproblems' && <WordProblems2Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+
+      {screen === 'session' && selectedExercise === '3/addition1000' && <Addition1000Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '3/subtraction1000' && <Subtraction1000Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '3/multiplication' && <Multiplication3Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '3/division' && <Division3Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '3/numberrange1000' && <NumberRange1000Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '3/wordproblems' && <WordProblems3Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+
       {screen === 'result' && selectedExercise === '1/addition' && <AdditionResult {...resultProps} />}
       {screen === 'result' && selectedExercise === '1/subtraction' && <SubtractionResult {...resultProps} />}
       {screen === 'result' && selectedExercise === '1/numbers' && <NumbersResult {...resultProps} />}
@@ -123,6 +164,20 @@ function App() {
       {screen === 'result' && selectedExercise === '1/numberrange20' && <NumberRange20Result {...resultProps} />}
       {screen === 'result' && selectedExercise === '1/plusminus' && <PlusMinusResult {...resultProps} />}
       {screen === 'result' && selectedExercise === '1/wordproblems' && <WordProblemsResult {...resultProps} />}
+
+      {screen === 'result' && selectedExercise === '2/addition100' && <Addition100Result {...resultProps} />}
+      {screen === 'result' && selectedExercise === '2/subtraction100' && <Subtraction100Result {...resultProps} />}
+      {screen === 'result' && selectedExercise === '2/einmaleins' && <EinmaleinsResult {...resultProps} />}
+      {screen === 'result' && selectedExercise === '2/division' && <Division2Result {...resultProps} />}
+      {screen === 'result' && selectedExercise === '2/numberrange100' && <NumberRange100Result {...resultProps} />}
+      {screen === 'result' && selectedExercise === '2/wordproblems' && <WordProblems2Result {...resultProps} />}
+
+      {screen === 'result' && selectedExercise === '3/addition1000' && <Addition1000Result {...resultProps} />}
+      {screen === 'result' && selectedExercise === '3/subtraction1000' && <Subtraction1000Result {...resultProps} />}
+      {screen === 'result' && selectedExercise === '3/multiplication' && <Multiplication3Result {...resultProps} />}
+      {screen === 'result' && selectedExercise === '3/division' && <Division3Result {...resultProps} />}
+      {screen === 'result' && selectedExercise === '3/numberrange1000' && <NumberRange1000Result {...resultProps} />}
+      {screen === 'result' && selectedExercise === '3/wordproblems' && <WordProblems3Result {...resultProps} />}
     </div>
   );
 }

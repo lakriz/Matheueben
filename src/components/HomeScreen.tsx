@@ -1,3 +1,7 @@
+import { useState } from 'react';
+import { useTheme } from '../theme/ThemeContext';
+import { useAuth } from '../auth/AuthContext';
+
 interface ExerciseCard {
   id: string;
   title: string;
@@ -106,14 +110,134 @@ const CLASS_1_EXERCISES: ExerciseCard[] = [
   },
 ];
 
-import { useTheme } from '../theme/ThemeContext';
-import { useAuth } from '../auth/AuthContext';
+const CLASS_2_EXERCISES: ExerciseCard[] = [
+  {
+    id: '2/addition100',
+    title: 'PLUS BIS 100',
+    description: 'Addieren im Zahlenraum bis 100',
+    emoji: '➕',
+    color: 'bg-blue-400',
+    textColor: 'text-blue-700',
+    available: true,
+  },
+  {
+    id: '2/subtraction100',
+    title: 'MINUS BIS 100',
+    description: 'Subtrahieren im Zahlenraum bis 100',
+    emoji: '➖',
+    color: 'bg-cyan-400',
+    textColor: 'text-cyan-700',
+    available: true,
+  },
+  {
+    id: '2/einmaleins',
+    title: 'EINMALEINS',
+    description: 'Das kleine Einmaleins üben',
+    emoji: '✖️',
+    color: 'bg-rose-400',
+    textColor: 'text-rose-700',
+    available: true,
+  },
+  {
+    id: '2/division',
+    title: 'TEILEN',
+    description: 'Einfaches Teilen ohne Rest',
+    emoji: '➗',
+    color: 'bg-emerald-400',
+    textColor: 'text-emerald-700',
+    available: true,
+  },
+  {
+    id: '2/numberrange100',
+    title: 'ZAHLENRAUM 100',
+    description: 'Zahlen bis 100 kennenlernen',
+    emoji: '🔟',
+    color: 'bg-indigo-400',
+    textColor: 'text-indigo-700',
+    available: true,
+  },
+  {
+    id: '2/wordproblems',
+    title: 'SACHAUFGABEN',
+    description: 'Sachaufgaben bis 100',
+    emoji: '📖',
+    color: 'bg-pink-400',
+    textColor: 'text-pink-700',
+    available: true,
+  },
+];
 
-// ...existing code...
+const CLASS_3_EXERCISES: ExerciseCard[] = [
+  {
+    id: '3/addition1000',
+    title: 'PLUS BIS 1000',
+    description: 'Addieren im Zahlenraum bis 1000',
+    emoji: '➕',
+    color: 'bg-blue-400',
+    textColor: 'text-blue-700',
+    available: true,
+  },
+  {
+    id: '3/subtraction1000',
+    title: 'MINUS BIS 1000',
+    description: 'Subtrahieren im Zahlenraum bis 1000',
+    emoji: '➖',
+    color: 'bg-cyan-400',
+    textColor: 'text-cyan-700',
+    available: true,
+  },
+  {
+    id: '3/multiplication',
+    title: 'MULTIPLIZIEREN',
+    description: 'Größere Zahlen multiplizieren',
+    emoji: '✖️',
+    color: 'bg-rose-400',
+    textColor: 'text-rose-700',
+    available: true,
+  },
+  {
+    id: '3/division',
+    title: 'DIVIDIEREN',
+    description: 'Division bis 100',
+    emoji: '➗',
+    color: 'bg-emerald-400',
+    textColor: 'text-emerald-700',
+    available: true,
+  },
+  {
+    id: '3/numberrange1000',
+    title: 'ZAHLENRAUM 1000',
+    description: 'Zahlen bis 1000 kennenlernen',
+    emoji: '🔢',
+    color: 'bg-indigo-400',
+    textColor: 'text-indigo-700',
+    available: true,
+  },
+  {
+    id: '3/wordproblems',
+    title: 'SACHAUFGABEN',
+    description: 'Sachaufgaben bis 1000',
+    emoji: '📖',
+    color: 'bg-pink-400',
+    textColor: 'text-pink-700',
+    available: true,
+  },
+];
+
+type GradeId = 1 | 2 | 3;
+
+const GRADES: { id: GradeId; label: string; exercises: ExerciseCard[] }[] = [
+  { id: 1, label: '1. KLASSE', exercises: CLASS_1_EXERCISES },
+  { id: 2, label: '2. KLASSE', exercises: CLASS_2_EXERCISES },
+  { id: 3, label: '3. KLASSE', exercises: CLASS_3_EXERCISES },
+];
 
 export default function HomeScreen({ onSelectExercise, onProfile }: Props) {
   const { theme } = useTheme();
   const { user } = useAuth();
+  const [selectedGrade, setSelectedGrade] = useState<GradeId>(1);
+
+  const currentGrade = GRADES.find((g) => g.id === selectedGrade)!;
 
   return (
     <div className={`tablet-screen flex h-full flex-col items-center p-3 bg-gradient-to-b ${theme.homeBg}`}>
@@ -140,15 +264,27 @@ export default function HomeScreen({ onSelectExercise, onProfile }: Props) {
         WAS MÖCHTEST DU ÜBEN?
       </p>
 
-      {/* Class badge */}
-      <div className={`flex items-center gap-2 ${theme.accentBg} rounded-2xl px-6 py-2 shadow-md mb-2`}>
-        <span className="text-3xl">🎒</span>
-        <span className="text-xl font-black text-white uppercase">1. KLASSE</span>
+      {/* Class tabs */}
+      <div className="flex gap-2 mb-2">
+        {GRADES.map((grade) => (
+          <button
+            key={grade.id}
+            onClick={() => setSelectedGrade(grade.id)}
+            className={`flex items-center gap-2 rounded-2xl px-5 py-2 shadow-md transition-all font-black text-lg uppercase ${
+              selectedGrade === grade.id
+                ? `${theme.accentBg} text-white scale-105`
+                : 'bg-white/80 text-gray-600 hover:bg-white hover:scale-105'
+            }`}
+          >
+            <span className="text-2xl">🎒</span>
+            {grade.label}
+          </button>
+        ))}
       </div>
 
       {/* Exercise cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 w-full max-w-4xl mb-2">
-        {CLASS_1_EXERCISES.map((ex) => (
+        {currentGrade.exercises.map((ex) => (
           <button
             key={ex.id}
             onClick={() => ex.available && onSelectExercise(ex.id)}
