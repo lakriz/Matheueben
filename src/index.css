@@ -38,7 +38,8 @@ canvas {
 .tablet-screen {
   position: relative;
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding-top: max(env(safe-area-inset-top), 0px);
 }
 
