@@ -46,7 +46,9 @@ const WORD_PROBLEM_POOL: WordProblemTemplate[] = [
   { text: 'Im Regal stehen 32 Bücher. Frau Müller stellt 19 neue dazu. Wie viele Bücher sind es jetzt?', answer: 51, emoji: '📚' },
   { text: 'Tim sammelt 45 Sticker. Seine Schwester gibt ihm 38 dazu. Wie viele hat er jetzt?', answer: 83, emoji: '⭐' },
   { text: 'Beim Sportfest laufen 23 Kinder mit und 18 springen weit. Wie viele Kinder machen mit?', answer: 41, emoji: '🏅' },
-
+  { text: 'Im Schwimmbad sind 34 Jungen und 29 Mädchen. Wie viele Kinder sind es insgesamt?', answer: 63, emoji: '🏊' },
+  { text: 'Leo sammelt 47 Muggelsteine. Er findet noch 25 mehr. Wie viele hat er jetzt?', answer: 72, emoji: '💎' },
+  { text: 'Im Tierheim wohnen 16 Hunde und 24 Katzen. Wie viele Tiere sind das zusammen?', answer: 40, emoji: '🐾' },
   // Subtraction
   { text: 'Im Bus sitzen 34 Kinder. An der nächsten Haltestelle steigen 12 aus. Wie viele Kinder sind noch im Bus?', answer: 22, emoji: '🚌' },
   { text: 'Lisa hat 50 Gummibärchen. Sie verschenkt 23. Wie viele hat sie noch?', answer: 27, emoji: '🍬' },
@@ -55,7 +57,8 @@ const WORD_PROBLEM_POOL: WordProblemTemplate[] = [
   { text: 'Papa hat 72 Euro. Er kauft ein Spielzeug für 28 Euro. Wie viel Geld hat er noch?', answer: 44, emoji: '💶' },
   { text: 'Auf der Wiese stehen 56 Schafe. 19 laufen weg. Wie viele Schafe bleiben?', answer: 37, emoji: '🐑' },
   { text: 'Im Kino sind 90 Plätze. 54 sind besetzt. Wie viele sind noch frei?', answer: 36, emoji: '🎬' },
-
+  { text: 'Im Supermarkt stehen 63 Einkaufswagen. 27 werden benutzt. Wie viele stehen noch da?', answer: 36, emoji: '🛒' },
+  { text: 'Oma hat 75 Kekse gebacken. Die Familie isst 38 davon. Wie viele Kekse bleiben?', answer: 37, emoji: '🍪' },
   // Simple multiplication
   { text: 'Jedes Kind bekommt 5 Bonbons. Es sind 4 Kinder da. Wie viele Bonbons braucht man?', answer: 20, emoji: '🍭' },
   { text: 'In einem Korb liegen 3 Äpfel. Oma hat 6 Körbe. Wie viele Äpfel hat sie?', answer: 18, emoji: '🧺' },
@@ -63,6 +66,13 @@ const WORD_PROBLEM_POOL: WordProblemTemplate[] = [
   { text: 'Jede Packung hat 8 Buntstifte. Lena kauft 3 Packungen. Wie viele Stifte hat sie?', answer: 24, emoji: '🖍️' },
   { text: 'Im Zoo leben 6 Affen in jedem Gehege. Es gibt 5 Gehege. Wie viele Affen gibt es?', answer: 30, emoji: '🐒' },
   { text: 'Ein Fahrrad hat 2 Räder. Wie viele Räder haben 9 Fahrräder?', answer: 18, emoji: '🚲' },
+  { text: 'Eine Spinne hat 8 Beine. Wie viele Beine haben 3 Spinnen zusammen?', answer: 24, emoji: '🕷️' },
+  { text: 'In jeder Schachtel sind 7 Schokoladen. Anna kauft 4 Schachteln. Wie viele Schokoladen hat sie?', answer: 28, emoji: '🍫' },
+  { text: 'Jede Blume hat 5 Blütenblätter. Im Garten stehen 6 Blumen. Wie viele Blütenblätter gibt es?', answer: 30, emoji: '🌸' },
+  // Simple division problems (as word problems)
+  { text: '20 Kinder teilen sich gleich auf 4 Tische auf. Wie viele Kinder sitzen an jedem Tisch?', answer: 5, emoji: '🏫' },
+  { text: 'Mama verteilt 18 Erdbeeren gleichmäßig auf 3 Teller. Wie viele Erdbeeren sind auf jedem Teller?', answer: 6, emoji: '🍓' },
+  { text: 'Papa hat 24 Plätzchen. Er legt sie in Gruppen zu je 6. Wie viele Gruppen gibt es?', answer: 4, emoji: '🍪' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -102,18 +112,16 @@ function buildSession(): ExerciseData[] {
     ),
   }));
 
-  // 4 drawing exercises with random digits
-  const digits = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4);
+  // 2 drawing exercises with random digits
+  const digits = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 2);
   const drawings: DrawingData[] = digits.map((d) => ({ type: 'drawing', digit: d }));
 
-  // Interleave: 3 word problems, 1 drawing, …
+  // Interleave: 6 word problems, 1 drawing, …
   const result: ExerciseData[] = [];
   let wi = 0;
   let di = 0;
   while (wi < wordProblems.length || di < drawings.length) {
-    if (wi < wordProblems.length) result.push(wordProblems[wi++]);
-    if (wi < wordProblems.length) result.push(wordProblems[wi++]);
-    if (wi < wordProblems.length) result.push(wordProblems[wi++]);
+    for (let k = 0; k < 6 && wi < wordProblems.length; k++) result.push(wordProblems[wi++]);
     if (di < drawings.length) result.push(drawings[di++]);
   }
   return result;

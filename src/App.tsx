@@ -16,6 +16,7 @@ import DoublingSession from './components/1/doubling/ExerciseSession';
 import NumberRange20Session from './components/1/numberrange20/ExerciseSession';
 import PlusMinusSession from './components/1/plusminus/ExerciseSession';
 import WordProblemsSession from './components/1/wordproblems/ExerciseSession';
+import PatternsSession from './components/1/patterns/ExerciseSession';
 import AdditionResult from './components/1/addition/ResultScreen';
 import SubtractionResult from './components/1/subtraction/ResultScreen';
 import NumbersResult from './components/1/numbers/ResultScreen';
@@ -26,6 +27,7 @@ import DoublingResult from './components/1/doubling/ResultScreen';
 import NumberRange20Result from './components/1/numberrange20/ResultScreen';
 import PlusMinusResult from './components/1/plusminus/ResultScreen';
 import WordProblemsResult from './components/1/wordproblems/ResultScreen';
+import PatternsResult from './components/1/patterns/ResultScreen';
 // Grade 2
 import Addition100Session from './components/2/addition100/ExerciseSession';
 import Subtraction100Session from './components/2/subtraction100/ExerciseSession';
@@ -33,12 +35,14 @@ import EinmaleinsSession from './components/2/einmaleins/ExerciseSession';
 import Division2Session from './components/2/division/ExerciseSession';
 import NumberRange100Session from './components/2/numberrange100/ExerciseSession';
 import WordProblems2Session from './components/2/wordproblems/ExerciseSession';
+import MissingOpSession from './components/2/missingop/ExerciseSession';
 import Addition100Result from './components/2/addition100/ResultScreen';
 import Subtraction100Result from './components/2/subtraction100/ResultScreen';
 import EinmaleinsResult from './components/2/einmaleins/ResultScreen';
 import Division2Result from './components/2/division/ResultScreen';
 import NumberRange100Result from './components/2/numberrange100/ResultScreen';
 import WordProblems2Result from './components/2/wordproblems/ResultScreen';
+import MissingOpResult from './components/2/missingop/ResultScreen';
 // Grade 3
 import Addition1000Session from './components/3/addition1000/ExerciseSession';
 import Subtraction1000Session from './components/3/subtraction1000/ExerciseSession';
@@ -139,6 +143,7 @@ function App() {
       {screen === 'session' && selectedExercise === '1/numberrange20' && <NumberRange20Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
       {screen === 'session' && selectedExercise === '1/plusminus' && <PlusMinusSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
       {screen === 'session' && selectedExercise === '1/wordproblems' && <WordProblemsSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '1/patterns' && <PatternsSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
 
       {screen === 'session' && selectedExercise === '2/addition100' && <Addition100Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
       {screen === 'session' && selectedExercise === '2/subtraction100' && <Subtraction100Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
@@ -146,6 +151,7 @@ function App() {
       {screen === 'session' && selectedExercise === '2/division' && <Division2Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
       {screen === 'session' && selectedExercise === '2/numberrange100' && <NumberRange100Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
       {screen === 'session' && selectedExercise === '2/wordproblems' && <WordProblems2Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
+      {screen === 'session' && selectedExercise === '2/missingop' && <MissingOpSession key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
 
       {screen === 'session' && selectedExercise === '3/addition1000' && <Addition1000Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
       {screen === 'session' && selectedExercise === '3/subtraction1000' && <Subtraction1000Session key={sessionKey} onComplete={handleSessionComplete} onCancel={handleHome} />}
@@ -164,6 +170,7 @@ function App() {
       {screen === 'result' && selectedExercise === '1/numberrange20' && <NumberRange20Result {...resultProps} />}
       {screen === 'result' && selectedExercise === '1/plusminus' && <PlusMinusResult {...resultProps} />}
       {screen === 'result' && selectedExercise === '1/wordproblems' && <WordProblemsResult {...resultProps} />}
+      {screen === 'result' && selectedExercise === '1/patterns' && <PatternsResult {...resultProps} />}
 
       {screen === 'result' && selectedExercise === '2/addition100' && <Addition100Result {...resultProps} />}
       {screen === 'result' && selectedExercise === '2/subtraction100' && <Subtraction100Result {...resultProps} />}
@@ -171,6 +178,7 @@ function App() {
       {screen === 'result' && selectedExercise === '2/division' && <Division2Result {...resultProps} />}
       {screen === 'result' && selectedExercise === '2/numberrange100' && <NumberRange100Result {...resultProps} />}
       {screen === 'result' && selectedExercise === '2/wordproblems' && <WordProblems2Result {...resultProps} />}
+      {screen === 'result' && selectedExercise === '2/missingop' && <MissingOpResult {...resultProps} />}
 
       {screen === 'result' && selectedExercise === '3/addition1000' && <Addition1000Result {...resultProps} />}
       {screen === 'result' && selectedExercise === '3/subtraction1000' && <Subtraction1000Result {...resultProps} />}

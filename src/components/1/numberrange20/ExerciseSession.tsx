@@ -64,7 +64,7 @@ function buildSession(): ExerciseData[] {
     return { type: 'missing', num, sequence, missingIdx, choices: generateChoices(num, min, max) };
   });
 
-  const drawings: DrawingData[] = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4)
+  const drawings: DrawingData[] = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 2)
     .map((d) => ({ type: 'drawing', digit: d }));
 
   const mainExercises = shuffle([...counts, ...missings]);
@@ -72,9 +72,7 @@ function buildSession(): ExerciseData[] {
   const result: ExerciseData[] = [];
   let mi = 0; let di = 0;
   while (mi < mainExercises.length || di < drawings.length) {
-    if (mi < mainExercises.length) result.push(mainExercises[mi++]);
-    if (mi < mainExercises.length) result.push(mainExercises[mi++]);
-    if (mi < mainExercises.length) result.push(mainExercises[mi++]);
+    for (let k = 0; k < 6 && mi < mainExercises.length; k++) result.push(mainExercises[mi++]);
     if (di < drawings.length) result.push(drawings[di++]);
   }
   return result;

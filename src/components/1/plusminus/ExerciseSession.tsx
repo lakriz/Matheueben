@@ -90,19 +90,17 @@ function buildSession(): ExerciseData[] {
     });
   }
 
-  // 4 drawing exercises
+  // 2 drawing exercises
   const drawings: DrawingData[] = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-    .slice(0, 4)
+    .slice(0, 2)
     .map((d) => ({ type: 'drawing', digit: d }));
 
-  // Interleave: 3 plusminus + 1 drawing, repeat
+  // Interleave: 6 plusminus + 1 drawing, repeat
   const result: ExerciseData[] = [];
   let pi = 0;
   let di = 0;
   while (pi < plusMinusExercises.length || di < drawings.length) {
-    if (pi < plusMinusExercises.length) result.push(plusMinusExercises[pi++]);
-    if (pi < plusMinusExercises.length) result.push(plusMinusExercises[pi++]);
-    if (pi < plusMinusExercises.length) result.push(plusMinusExercises[pi++]);
+    for (let k = 0; k < 6 && pi < plusMinusExercises.length; k++) result.push(plusMinusExercises[pi++]);
     if (di < drawings.length) result.push(drawings[di++]);
   }
   return result;

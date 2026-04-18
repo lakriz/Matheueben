@@ -31,14 +31,12 @@ function buildSession(): ExerciseData[] {
     const count = Math.floor(Math.random() * 9) + 1;
     return { type: 'counting', count, emojiIdx: i % 8, choices: generateChoices(count) };
   });
-  const drawings: DrawingData[] = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4)
+  const drawings: DrawingData[] = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 2)
     .map((d) => ({ type: 'drawing', digit: d }));
   const result: ExerciseData[] = [];
   let ci = 0; let di = 0;
   while (ci < countings.length || di < drawings.length) {
-    if (ci < countings.length) result.push(countings[ci++]);
-    if (ci < countings.length) result.push(countings[ci++]);
-    if (ci < countings.length) result.push(countings[ci++]);
+    for (let k = 0; k < 6 && ci < countings.length; k++) result.push(countings[ci++]);
     if (di < drawings.length) result.push(drawings[di++]);
   }
   return result;

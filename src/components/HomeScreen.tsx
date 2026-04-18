@@ -108,6 +108,15 @@ const CLASS_1_EXERCISES: ExerciseCard[] = [
     textColor: 'text-amber-700',
     available: true,
   },
+  {
+    id: '1/patterns',
+    title: 'ZAHLEN-MUSTER',
+    description: 'Fehlende Zahl im Muster finden',
+    emoji: '🔢',
+    color: 'bg-violet-400',
+    textColor: 'text-violet-700',
+    available: true,
+  },
 ];
 
 const CLASS_2_EXERCISES: ExerciseCard[] = [
@@ -163,6 +172,15 @@ const CLASS_2_EXERCISES: ExerciseCard[] = [
     emoji: '📖',
     color: 'bg-pink-400',
     textColor: 'text-pink-700',
+    available: true,
+  },
+  {
+    id: '2/missingop',
+    title: 'GEHEIMZAHL',
+    description: 'Finde die fehlende Zahl',
+    emoji: '🔍',
+    color: 'bg-violet-400',
+    textColor: 'text-violet-700',
     available: true,
   },
 ];

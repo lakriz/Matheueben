@@ -43,6 +43,18 @@ const WORD_PROBLEMS_RAW: Array<{ text: string; emoji: string; correctAnswer: num
   { text: 'Ben hat 9 Karten. Er verschenkt 3. Wie viele Karten hat Ben noch?', emoji: '🃏', correctAnswer: 6 },
   { text: 'Im Baum hängen 16 Äpfel. 7 fallen ab. Wie viele Äpfel hängen noch oben?', emoji: '🍎', correctAnswer: 9 },
   { text: 'Klara hat 20 Perlen. Sie verliert 8. Wie viele Perlen hat Klara noch?', emoji: '💎', correctAnswer: 12 },
+  // More fun addition problems
+  { text: 'Ein Frosch springt 3 Mal. Jedes Mal springt er 2 Schritte. Wie viele Schritte macht er?', emoji: '🐸', correctAnswer: 6 },
+  { text: 'Im Zoo sehen wir 4 Löwen und 5 Tiger. Wie viele große Katzen sind das?', emoji: '🦁', correctAnswer: 9 },
+  { text: 'Auf dem Spielplatz sind 6 Mädchen und 4 Jungen. Wie viele Kinder sind es?', emoji: '🛝', correctAnswer: 10 },
+  { text: 'Nico sammelt 7 Kastanien und findet noch 8 mehr. Wie viele hat er jetzt?', emoji: '🌰', correctAnswer: 15 },
+  { text: 'Im Aquarium schwimmen 5 rote und 6 blaue Fische. Wie viele Fische sind das?', emoji: '🐠', correctAnswer: 11 },
+  { text: 'Auf dem Bauernhof gibt es 3 Hunde und 9 Katzen. Wie viele Tiere sind das?', emoji: '🐕', correctAnswer: 12 },
+  // More fun subtraction problems
+  { text: 'Im Beutel sind 10 Bonbons. Luca isst 4 davon. Wie viele Bonbons sind noch da?', emoji: '🍭', correctAnswer: 6 },
+  { text: 'Auf dem Baum sitzen 12 Spatzen. 5 fliegen weg. Wie viele Spatzen bleiben?', emoji: '🐦', correctAnswer: 7 },
+  { text: 'Mia hat 15 Aufkleber. Sie schenkt 6 ihrer Freundin. Wie viele hat sie noch?', emoji: '⭐', correctAnswer: 9 },
+  { text: 'In der Schule haben 18 Kinder Hausaufgaben gemacht. 9 haben noch nicht fertig. Wie viele haben fertig?', emoji: '📝', correctAnswer: 9 },
 ];
 
 function buildChoices(correct: number): number[] {
@@ -76,15 +88,13 @@ function buildSession(): ExerciseData[] {
     problem: { ...raw, choices: buildChoices(raw.correctAnswer) },
   }));
 
-  const drawings: DrawingData[] = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4)
+  const drawings: DrawingData[] = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 2)
     .map((d) => ({ type: 'drawing', digit: d }));
 
   const result: ExerciseData[] = [];
   let pi = 0; let di = 0;
   while (pi < problems.length || di < drawings.length) {
-    if (pi < problems.length) result.push(problems[pi++]);
-    if (pi < problems.length) result.push(problems[pi++]);
-    if (pi < problems.length) result.push(problems[pi++]);
+    for (let k = 0; k < 6 && pi < problems.length; k++) result.push(problems[pi++]);
     if (di < drawings.length) result.push(drawings[di++]);
   }
   return result;
