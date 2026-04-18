@@ -33,15 +33,13 @@ function buildSession(): ExerciseData[] {
   const comparisons: ComparisonData[] = shuffle(pairs).slice(0, 12)
     .map(([n1, n2]) => ({ type: 'comparison', num1: n1, num2: n2 }));
 
-  const drawings: DrawingData[] = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4)
+  const drawings: DrawingData[] = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 2)
     .map((d) => ({ type: 'drawing', digit: d }));
 
   const result: ExerciseData[] = [];
   let ci = 0; let di = 0;
   while (ci < comparisons.length || di < drawings.length) {
-    if (ci < comparisons.length) result.push(comparisons[ci++]);
-    if (ci < comparisons.length) result.push(comparisons[ci++]);
-    if (ci < comparisons.length) result.push(comparisons[ci++]);
+    for (let k = 0; k < 6 && ci < comparisons.length; k++) result.push(comparisons[ci++]);
     if (di < drawings.length) result.push(drawings[di++]);
   }
   return result;

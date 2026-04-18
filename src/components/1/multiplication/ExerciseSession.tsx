@@ -51,15 +51,13 @@ function buildSession(): ExerciseData[] {
     };
   });
 
-  const drawings: DrawingData[] = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4)
+  const drawings: DrawingData[] = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 2)
     .map((d) => ({ type: 'drawing', digit: d }));
 
   const result: ExerciseData[] = [];
   let mi = 0; let di = 0;
   while (mi < mults.length || di < drawings.length) {
-    if (mi < mults.length) result.push(mults[mi++]);
-    if (mi < mults.length) result.push(mults[mi++]);
-    if (mi < mults.length) result.push(mults[mi++]);
+    for (let k = 0; k < 6 && mi < mults.length; k++) result.push(mults[mi++]);
     if (di < drawings.length) result.push(drawings[di++]);
   }
   return result;

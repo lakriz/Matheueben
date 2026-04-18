@@ -109,18 +109,16 @@ function buildSession(): ExerciseData[] {
   // Pick 12 random problems from the pool
   const problems = shuffle(pool).slice(0, 12);
 
-  // Drawing exercises: pick 4 random digits
-  const digits = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4);
+  // Drawing exercises: pick 2 random digits
+  const digits = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 2);
   const drawings: DrawingData[] = digits.map((d) => ({ type: 'drawing', digit: d }));
 
-  // Interleave: 3 number range, 1 drawing, 3 number range, 1 drawing, …
+  // Interleave: 6 number range, 1 drawing, 6 number range, 1 drawing
   const result: ExerciseData[] = [];
   let ni = 0;
   let di = 0;
   while (ni < problems.length || di < drawings.length) {
-    if (ni < problems.length) result.push(problems[ni++]);
-    if (ni < problems.length) result.push(problems[ni++]);
-    if (ni < problems.length) result.push(problems[ni++]);
+    for (let k = 0; k < 6 && ni < problems.length; k++) result.push(problems[ni++]);
     if (di < drawings.length) result.push(drawings[di++]);
   }
   return result;

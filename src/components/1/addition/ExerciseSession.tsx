@@ -89,10 +89,6 @@ function buildSession(): ExerciseData[] {
     };
   });
 
-  // Drawing exercises: pick 4 digits
-  const digits = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]).slice(0, 4);
-  const drawings: DrawingData[] = digits.map((d) => ({ type: 'drawing', digit: d }));
-
   // Counting addition exercises – one per scenario type, then pick 4
   const allScenarioTypes: CountingScenarioType[] = [
     'dice', 'dice3', 'apples', 'ladder', 'stars', 'flowers', 'fish', 'birds',
@@ -127,15 +123,25 @@ function buildSession(): ExerciseData[] {
   });
   const countings: CountingAdditionData[] = shuffle(scenarioPool).slice(0, 4);
 
-  // Interleave: add, add, count, draw, add, add, count, draw, …
+  // Interleave: add, add, count, add, add, count, draw, …
+  const mainPool: ExerciseData[] = [];
+  {
+    let tempAi = 0, tempCi = 0;
+    while (tempAi < additions.length || tempCi < countings.length) {
+      if (tempAi < additions.length) mainPool.push(additions[tempAi++]);
+      if (tempAi < additions.length) mainPool.push(additions[tempAi++]);
+      if (tempCi < countings.length) mainPool.push(countings[tempCi++]);
+    }
+  }
+
+  // Only 2 drawing exercises per session
+  const drawings: DrawingData[] = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 2).map((d) => ({ type: 'drawing', digit: d }));
+
   const result: ExerciseData[] = [];
-  let ai = 0;
-  let ci = 0;
+  let mi = 0;
   let di = 0;
-  while (ai < additions.length || ci < countings.length || di < drawings.length) {
-    if (ai < additions.length) result.push(additions[ai++]);
-    if (ai < additions.length) result.push(additions[ai++]);
-    if (ci < countings.length) result.push(countings[ci++]);
+  while (mi < mainPool.length || di < drawings.length) {
+    for (let k = 0; k < 6 && mi < mainPool.length; k++) result.push(mainPool[mi++]);
     if (di < drawings.length) result.push(drawings[di++]);
   }
   return result;

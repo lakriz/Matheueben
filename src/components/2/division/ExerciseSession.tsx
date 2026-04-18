@@ -72,18 +72,16 @@ function buildSession(): ExerciseData[] {
     };
   });
 
-  // Drawing exercises: pick 4 random digits
-  const digits = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4);
+  // Drawing exercises: pick 2 random digits
+  const digits = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 2);
   const drawings: DrawingData[] = digits.map((d) => ({ type: 'drawing', digit: d }));
 
-  // Interleave: 3 division, 1 drawing, 3 division, 1 drawing, …
+  // Interleave: 6 division, 1 drawing, 6 division, 1 drawing
   const result: ExerciseData[] = [];
   let di = 0;
   let dri = 0;
   while (di < divisions.length || dri < drawings.length) {
-    if (di < divisions.length) result.push(divisions[di++]);
-    if (di < divisions.length) result.push(divisions[di++]);
-    if (di < divisions.length) result.push(divisions[di++]);
+    for (let k = 0; k < 6 && di < divisions.length; k++) result.push(divisions[di++]);
     if (dri < drawings.length) result.push(drawings[dri++]);
   }
   return result;
